@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Merge PDF Free — Combine Multiple PDFs Online | PDFCraft</title>
+  <meta name="description" content="Merge multiple PDF files into one document online for free. No signup, no upload to server. Select PDFs, drag to reorder, click merge and download instantly.">
+  <link rel="canonical" href="https://pdfcraft.in/merge/">
+  <meta property="og:title" content="Merge PDF Free — Combine Multiple PDFs Online">
+  <meta property="og:url" content="https://pdfcraft.in/merge/">
+  <meta name="robots" content="index, follow">
+  <link rel="stylesheet" href="../css/main.css">
+  <script type="application/ld+json">
+  {"@context":"https://schema.org","@type":"WebApplication","name":"Merge PDF","url":"https://pdfcraft.in/merge/","applicationCategory":"UtilitiesApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"0","priceCurrency":"INR"},"description":"Merge multiple PDF files into one online for free. Browser-based, no upload."}
+  </script>
+  <script type="application/ld+json">
+  {"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"How do I merge PDF files for free?","acceptedAnswer":{"@type":"Answer","text":"Upload your PDF files using PDFCraft's merge tool, drag to reorder them, then click Merge PDF and download the combined file. It's completely free and files never leave your browser."}},{"@type":"Question","name":"Is there a limit on number of PDFs I can merge?","acceptedAnswer":{"@type":"Answer","text":"You can merge up to 20 PDFs at once on PDFCraft. For very large files, processing may take a few extra seconds as everything runs in your browser."}},{"@type":"Question","name":"Are my PDF files safe when merging online?","acceptedAnswer":{"@type":"Answer","text":"Yes. PDFCraft processes all files directly in your browser — no file is ever uploaded to a server. Your PDFs stay completely private on your device."}}]}
+  </script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
+</head>
+<body>
+<nav><a class="nav-logo" href="../index.html"><span class="pdf-icon">PDF</span>Craft</a></nav>
+
+<div class="container">
+<div class="tool-page">
+  <a class="back-link" href="../index.html">← All PDF Tools</a>
+  <h1 class="tool-title">📎 Merge PDF</h1>
+  <p class="tool-desc">Combine multiple PDF files into a single document. Select files, drag to reorder, then merge.</p>
+
+  <div class="dropzone" id="dropzone">
+    <input type="file" accept=".pdf" multiple id="fileInput" onchange="handleFiles(this.files)">
+    <div class="dropzone-icon">📂</div>
+    <div class="dropzone-text">Drop PDFs here or click to select</div>
+    <div class="dropzone-sub">Select multiple files at once — order them below</div>
+    <span class="dropzone-limit">Up to 20 files</span>
+  </div>
+
+  <div class="file-list" id="fileList"></div>
+
+  <div class="action-bar">
+    <button class="btn btn-red" id="mergeBtn" onclick="mergePDFs()" disabled>📎 Merge PDF</button>
+    <button class="btn btn-gray" onclick="clearFiles()">Clear</button>
+  </div>
+
+  <div class="progress-wrap" id="progress">
+    <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+    <div class="progress-label" id="progressLabel">Merging…</div>
+  </div>
+
+  <div class="result-box" id="result">
+    <div class="result-info">
+      <strong>✓ Merge complete!</strong>
+      <p id="resultInfo">Your merged PDF is ready.</p>
+    </div>
+    <button class="btn btn-download" id="downloadBtn">⬇ Download</button>
+  </div>
+
+  <div class="security">
+    <span>🔒</span>
+    <span>Your PDF files are processed entirely in your browser. No file is ever uploaded to a server.</span>
+  </div>
+
+  <div class="tips">
+    <h3>Tips</h3>
+    <ul>
+      <li>Select files in the order you want them merged, or drag to reorder after selecting</li>
+      <li>You can add more files after the first selection by clicking again</li>
+      <li>Maximum 20 files per merge operation</li>
+    </ul>
+  </div>
+
+  <div class="seo-content">
+    <h2>How to Merge PDF Files Free</h2>
+    <p>Merging PDF files used to require expensive software like Adobe Acrobat. PDFCraft lets you <strong>merge PDFs for free</strong> directly in your browser — no software download, no signup, no file size limits imposed by upload restrictions.</p>
+    <p>Common uses: combining multiple bank statements, merging chapters of a report, combining scanned documents, attaching multiple contracts into one file.</p>
+
+    <h2>Frequently Asked Questions</h2>
+    <div style="display:flex;flex-direction:column;gap:14px;margin-top:8px">
+      <div><strong>How do I merge PDF files for free?</strong><p style="margin-top:4px">Upload your PDFs above, drag to reorder if needed, then click Merge PDF and download the combined file.</p></div>
+      <div><strong>Is there a limit on number of PDFs I can merge?</strong><p style="margin-top:4px">Up to 20 PDFs per merge. For very large files, processing may take a few seconds since everything runs in your browser.</p></div>
+      <div><strong>Are my files safe?</strong><p style="margin-top:4px">Completely. No file is ever uploaded to any server. Everything runs in your browser's memory and is deleted when you close the tab.</p></div>
+    </div>
+
+    <div class="related-links">
+      <strong>Related tools:</strong>
+      <a href="../split/">Split PDF →</a>
+      <a href="../compress/">Compress PDF →</a>
+      <a href="../rotate/">Rotate PDF →</a>
+    </div>
+  </div>
+</div>
+</div>
+
+<footer><p>© 2025 PDFCraft — Files processed locally in your browser. No data stored.</p></footer>
+
+<script>
+let files = [];
+let mergedBytes = null;
+
+const dropzone = document.getElementById('dropzone');
+dropzone.addEventListener('dragover', e => { e.preventDefault(); dropzone.classList.add('drag-over'); });
+dropzone.addEventListener('dragleave', () => dropzone.classList.remove('drag-over'));
+dropzone.addEventListener('drop', e => { e.preventDefault(); dropzone.classList.remove('drag-over'); handleFiles(e.dataTransfer.files); });
+
+function handleFiles(newFiles) {
+  for (const f of newFiles) {
+    if (f.type === 'application/pdf' && files.length < 20) files.push(f);
+  }
+  renderList();
+}
+
+function renderList() {
+  const list = document.getElementById('fileList');
+  list.innerHTML = files.map((f, i) => `
+    <div class="file-item">
+      <span class="file-item-icon">📄</span>
+      <span class="file-item-name">${escHtml(f.name)}</span>
+      <span class="file-item-size">${fmtSize(f.size)}</span>
+      <button class="file-item-remove" onclick="removeFile(${i})">×</button>
+    </div>
+  `).join('');
+  document.getElementById('mergeBtn').disabled = files.length < 2;
+  document.getElementById('result').classList.remove('show');
+}
+
+function removeFile(i) { files.splice(i, 1); renderList(); }
+function clearFiles() { files = []; renderList(); document.getElementById('fileInput').value = ''; }
+function escHtml(s) { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+function fmtSize(b) { return b > 1048576 ? (b/1048576).toFixed(1)+' MB' : (b/1024).toFixed(0)+' KB'; }
+
+async function mergePDFs() {
+  if (files.length < 2) return;
+  showProgress('Loading files…', 10);
+  document.getElementById('mergeBtn').disabled = true;
+
+  try {
+    const { PDFDocument } = PDFLib;
+    const merged = await PDFDocument.create();
+
+    for (let i = 0; i < files.length; i++) {
+      setProgress(10 + Math.round((i / files.length) * 70), `Processing ${files[i].name}…`);
+      const bytes = await files[i].arrayBuffer();
+      const pdf = await PDFDocument.load(bytes);
+      const pages = await merged.copyPages(pdf, pdf.getPageIndices());
+      pages.forEach(p => merged.addPage(p));
+    }
+
+    setProgress(90, 'Finalising…');
+    mergedBytes = await merged.save();
+    setProgress(100, 'Done!');
+
+    const totalPages = (await PDFLib.PDFDocument.load(mergedBytes)).getPageCount();
+    document.getElementById('resultInfo').textContent = `${files.length} PDFs merged → ${totalPages} pages, ${fmtSize(mergedBytes.byteLength)}`;
+    document.getElementById('downloadBtn').onclick = () => download(mergedBytes, 'merged.pdf');
+    document.getElementById('result').classList.add('show');
+    document.getElementById('progress').classList.remove('show');
+  } catch (e) {
+    alert('Error merging PDFs: ' + e.message);
+    document.getElementById('progress').classList.remove('show');
+  }
+  document.getElementById('mergeBtn').disabled = false;
+}
+
+function showProgress(label, pct) {
+  document.getElementById('progress').classList.add('show');
+  document.getElementById('result').classList.remove('show');
+  setProgress(pct, label);
+}
+function setProgress(pct, label) {
+  document.getElementById('progressFill').style.width = pct + '%';
+  document.getElementById('progressLabel').textContent = label;
+}
+function download(bytes, name) {
+  const blob = new Blob([bytes], { type: 'application/pdf' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = name;
+  a.click();
+  URL.revokeObjectURL(a.href);
+}
+</script>
+</body>
+</html>

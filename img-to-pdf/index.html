@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Image to PDF Free — Convert JPG PNG to PDF Online | PDFCraft</title>
+  <meta name="description" content="Convert JPG, PNG, WEBP images to PDF online for free. Combine multiple images into one PDF. No upload, no signup, browser-based.">
+  <link rel="canonical" href="https://pdfcraft.in/img-to-pdf/">
+  <meta property="og:title" content="Image to PDF — Convert JPG PNG to PDF Free">
+  <meta property="og:url" content="https://pdfcraft.in/img-to-pdf/">
+  <meta name="robots" content="index, follow">
+  <link rel="stylesheet" href="../css/main.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
+  <script type="application/ld+json">
+  {"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"How do I convert an image to PDF for free?","acceptedAnswer":{"@type":"Answer","text":"Upload your JPG or PNG image on PDFCraft's Image to PDF tool, then click Convert and download the PDF. It's free and processes in your browser with no upload."}},{"@type":"Question","name":"Can I combine multiple images into one PDF?","acceptedAnswer":{"@type":"Answer","text":"Yes. Select multiple images at once and PDFCraft will combine them into a single PDF, one image per page, in the order you choose."}},{"@type":"Question","name":"What image formats are supported?","acceptedAnswer":{"@type":"Answer","text":"PDFCraft supports JPG/JPEG, PNG, and WEBP image formats for conversion to PDF."}}]}
+  </script>
+</head>
+<body>
+<nav><a class="nav-logo" href="../index.html"><span class="pdf-icon">PDF</span>Craft</a></nav>
+
+<div class="container">
+<div class="tool-page">
+  <a class="back-link" href="../index.html">← All PDF Tools</a>
+  <h1 class="tool-title">🖼️ Image to PDF</h1>
+  <p class="tool-desc">Convert JPG, PNG or WEBP images to a PDF. Select multiple images to combine them into one PDF document.</p>
+
+  <div class="dropzone" id="dropzone">
+    <input type="file" accept="image/jpeg,image/png,image/webp" multiple id="fileInput" onchange="handleFiles(this.files)">
+    <div class="dropzone-icon">🖼️</div>
+    <div class="dropzone-text">Drop images here or click to select</div>
+    <div class="dropzone-sub">JPG, PNG, WEBP — select multiple to combine</div>
+    <span class="dropzone-limit">Up to 20 images</span>
+  </div>
+
+  <div id="preview-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(100px,1fr));gap:10px;margin-top:14px"></div>
+
+  <div style="margin-top:14px;display:none" id="pageOptions">
+    <label style="font-size:13px;font-weight:600;color:var(--label)">Page size</label>
+    <select id="pageSize" style="margin-left:10px;padding:6px 10px;border:1px solid var(--border);border-radius:8px;font-size:13px">
+      <option value="a4">A4 (210×297mm)</option>
+      <option value="letter">Letter (8.5×11in)</option>
+      <option value="fit">Fit to image size</option>
+    </select>
+  </div>
+
+  <div class="action-bar">
+    <button class="btn btn-red" id="convertBtn" onclick="convertToPDF()" disabled>🖼️ Convert to PDF</button>
+    <button class="btn btn-gray" onclick="clearAll()">Clear</button>
+  </div>
+
+  <div class="progress-wrap" id="progress">
+    <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+    <div class="progress-label" id="progressLabel">Converting…</div>
+  </div>
+
+  <div class="result-box" id="result">
+    <div class="result-info"><strong>✓ PDF created!</strong><p id="resultInfo"></p></div>
+    <button class="btn btn-download" id="downloadBtn">⬇ Download PDF</button>
+  </div>
+
+  <div class="security"><span>🔒</span><span>Images are converted in your browser. No file is ever uploaded.</span></div>
+
+  <div class="tips">
+    <h3>Tips</h3>
+    <ul>
+      <li>Select all images at once to combine them into one PDF</li>
+      <li>Use A4 page size to match standard document formats</li>
+      <li>Images are scaled to fill the page while keeping their aspect ratio</li>
+      <li>Works great for scanned documents, photos, screenshots</li>
+    </ul>
+  </div>
+
+  <div class="seo-content">
+    <h2>Convert Images to PDF — Common Uses</h2>
+    <p>Converting images to PDF is one of the most common document tasks. Use cases include: sending scanned documents by email, combining photos into a single sharable file, converting WhatsApp-shared screenshots to a PDF report, and creating a photo portfolio PDF.</p>
+    <p><strong>Supports JPG, PNG, and WEBP.</strong> Select multiple images at once to merge them into a single multi-page PDF, one image per page.</p>
+
+    <h2>Frequently Asked Questions</h2>
+    <div style="display:flex;flex-direction:column;gap:12px;margin-top:8px">
+      <div><strong>How do I convert an image to PDF?</strong><p style="margin-top:3px">Upload your image above, choose a page size, then click Convert. Download the PDF instantly.</p></div>
+      <div><strong>Can I combine multiple images into one PDF?</strong><p style="margin-top:3px">Yes — select multiple images at once and they'll be combined into a single PDF, one image per page, in the order you select them.</p></div>
+      <div><strong>What image formats are supported?</strong><p style="margin-top:3px">JPG/JPEG, PNG, and WEBP.</p></div>
+    </div>
+
+    <div class="related-links">
+      <strong>Related tools:</strong>
+      <a href="../pdf-to-img/">PDF to Image →</a>
+      <a href="../merge/">Merge PDF →</a>
+      <a href="../compress/">Compress PDF →</a>
+    </div>
+  </div>
+</div>
+</div>
+<footer><p>© 2025 PDFCraft — Files processed locally in your browser. No data stored.</p></footer>
+
+<script>
+let images = [];
+
+const dropzone = document.getElementById('dropzone');
+dropzone.addEventListener('dragover', e => { e.preventDefault(); dropzone.classList.add('drag-over'); });
+dropzone.addEventListener('dragleave', () => dropzone.classList.remove('drag-over'));
+dropzone.addEventListener('drop', e => { e.preventDefault(); dropzone.classList.remove('drag-over'); handleFiles(e.dataTransfer.files); });
+
+function handleFiles(files) {
+  for (const f of files) {
+    if (images.length >= 20) break;
+    if (/image\/(jpeg|png|webp)/.test(f.type)) images.push(f);
+  }
+  renderPreviews();
+}
+
+function renderPreviews() {
+  const grid = document.getElementById('preview-grid');
+  grid.innerHTML = images.map((f,i) => {
+    const url = URL.createObjectURL(f);
+    return `<div style="position:relative">
+      <img src="${url}" style="width:100%;height:80px;object-fit:cover;border-radius:8px;border:1px solid var(--border)">
+      <button onclick="removeImg(${i})" style="position:absolute;top:2px;right:2px;background:rgba(0,0,0,.5);color:#fff;border:none;border-radius:50%;width:18px;height:18px;cursor:pointer;font-size:12px;line-height:1">×</button>
+      <div style="font-size:10px;color:var(--muted);margin-top:3px;text-overflow:ellipsis;overflow:hidden;white-space:nowrap">${f.name}</div>
+    </div>`;
+  }).join('');
+  document.getElementById('convertBtn').disabled = images.length === 0;
+  document.getElementById('pageOptions').style.display = images.length > 0 ? 'block' : 'none';
+  document.getElementById('result').classList.remove('show');
+}
+
+function removeImg(i) { images.splice(i,1); renderPreviews(); }
+function clearAll() { images=[]; document.getElementById('fileInput').value=''; renderPreviews(); }
+
+async function convertToPDF() {
+  if (!images.length) return;
+  document.getElementById('progress').classList.add('show');
+  document.getElementById('result').classList.remove('show');
+  document.getElementById('convertBtn').disabled = true;
+  const pageSize = document.getElementById('pageSize').value;
+
+  try {
+    const { PDFDocument, PageSizes } = PDFLib;
+    const pdf = await PDFDocument.create();
+
+    for (let i = 0; i < images.length; i++) {
+      document.getElementById('progressFill').style.width = Math.round((i/images.length)*90)+'%';
+      document.getElementById('progressLabel').textContent = `Adding image ${i+1} of ${images.length}…`;
+      const bytes = await images[i].arrayBuffer();
+      let img;
+      if (images[i].type === 'image/png') img = await pdf.embedPng(bytes);
+      else img = await pdf.embedJpg(bytes);
+
+      let pw, ph;
+      if (pageSize === 'a4') { pw = 595.28; ph = 841.89; }
+      else if (pageSize === 'letter') { pw = 612; ph = 792; }
+      else { pw = img.width; ph = img.height; }
+
+      const page = pdf.addPage([pw, ph]);
+      const scale = Math.min(pw / img.width, ph / img.height);
+      const w = img.width * scale;
+      const h = img.height * scale;
+      page.drawImage(img, { x: (pw-w)/2, y: (ph-h)/2, width: w, height: h });
+    }
+
+    document.getElementById('progressFill').style.width = '100%';
+    const saved = await pdf.save();
+    document.getElementById('resultInfo').textContent = `${images.length} image(s) → PDF, ${fmtSize(saved.byteLength)}`;
+    document.getElementById('downloadBtn').onclick = () => dl(saved, 'images.pdf');
+    document.getElementById('result').classList.add('show');
+    document.getElementById('progress').classList.remove('show');
+  } catch(e) { alert('Error: ' + e.message); document.getElementById('progress').classList.remove('show'); }
+  document.getElementById('convertBtn').disabled = false;
+}
+
+function fmtSize(b) { return b>1048576?(b/1048576).toFixed(1)+' MB':(b/1024).toFixed(0)+' KB'; }
+function dl(bytes, name) {
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(new Blob([bytes],{type:'application/pdf'}));
+  a.download = name; a.click(); URL.revokeObjectURL(a.href);
+}
+</script>
+</body>
+</html>

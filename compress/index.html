@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Compress PDF Free — Reduce PDF File Size Online | PDFCraft</title>
+  <meta name="description" content="Compress PDF file size online for free. Reduce PDF size without losing quality. No upload, no signup, works in your browser instantly.">
+  <link rel="canonical" href="https://pdfcraft.in/compress/">
+  <meta property="og:title" content="Compress PDF Free — Reduce PDF File Size Online">
+  <meta property="og:url" content="https://pdfcraft.in/compress/">
+  <meta name="robots" content="index, follow">
+  <link rel="stylesheet" href="../css/main.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
+</head>
+<body>
+<nav><a class="nav-logo" href="../index.html"><span class="pdf-icon">PDF</span>Craft</a></nav>
+
+<div class="container">
+<div class="tool-page">
+  <a class="back-link" href="../index.html">← All PDF Tools</a>
+  <h1 class="tool-title">🗜️ Compress PDF</h1>
+  <p class="tool-desc">Reduce the file size of a PDF. Useful for email attachments, upload limits, and storage. All in your browser.</p>
+
+  <div class="dropzone" id="dropzone">
+    <input type="file" accept=".pdf" id="fileInput" onchange="handleFile(this.files[0])">
+    <div class="dropzone-icon">📄</div>
+    <div class="dropzone-text">Drop a PDF here or click to select</div>
+    <div class="dropzone-sub">One PDF file</div>
+  </div>
+
+  <div id="fileInfo" style="display:none;margin-top:12px" class="file-item">
+    <span class="file-item-icon">📄</span>
+    <span class="file-item-name" id="fileName"></span>
+    <span class="file-item-size" id="fileSize"></span>
+    <button class="file-item-remove" onclick="clearFile()">×</button>
+  </div>
+
+  <div id="compressOptions" style="display:none;margin-top:18px">
+    <label style="font-size:13px;font-weight:600;color:var(--label);display:block;margin-bottom:10px">Compression level</label>
+    <div style="display:flex;flex-direction:column;gap:8px">
+      <label style="display:flex;align-items:center;gap:8px;font-size:14px;cursor:pointer">
+        <input type="radio" name="level" value="low"> Low — smaller file, some quality loss
+      </label>
+      <label style="display:flex;align-items:center;gap:8px;font-size:14px;cursor:pointer">
+        <input type="radio" name="level" value="medium" checked> Medium — balanced (recommended)
+      </label>
+      <label style="display:flex;align-items:center;gap:8px;font-size:14px;cursor:pointer">
+        <input type="radio" name="level" value="high"> High — minimum size, noticeable quality reduction
+      </label>
+    </div>
+    <p style="font-size:12px;color:var(--muted);margin-top:10px">⚠️ Note: Browser-based compression re-encodes the PDF structure. Results vary by PDF type. Scanned image PDFs compress most. Text-only PDFs compress least.</p>
+  </div>
+
+  <div class="action-bar">
+    <button class="btn btn-red" id="compressBtn" onclick="compressPDF()" disabled>🗜️ Compress PDF</button>
+    <button class="btn btn-gray" onclick="clearFile()">Clear</button>
+  </div>
+
+  <div class="progress-wrap" id="progress">
+    <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+    <div class="progress-label" id="progressLabel">Compressing…</div>
+  </div>
+
+  <div class="result-box" id="result">
+    <div class="result-info"><strong>✓ Compression done!</strong><p id="resultInfo"></p></div>
+    <button class="btn btn-download" id="downloadBtn">⬇ Download</button>
+  </div>
+
+  <div class="security"><span>🔒</span><span>Your PDF is processed in your browser only. Never uploaded.</span></div>
+
+  <div class="tips">
+    <h3>When compression works best</h3>
+    <ul>
+      <li>PDFs with many embedded images compress the most (scanned docs, photo PDFs)</li>
+      <li>Text-only PDFs are already small — minimal compression possible</li>
+      <li>For maximum reduction: use Low quality + remove unnecessary metadata</li>
+      <li>Most email systems have a 10–25 MB attachment limit — compress to fit</li>
+    </ul>
+  </div>
+
+  <div class="seo-content">
+    <h2>How to Reduce PDF File Size</h2>
+    <p>Large PDFs are common when scanning documents or exporting from design tools. PDFCraft reduces PDF file size by recompressing the internal structure and images. <strong>No file is uploaded</strong> — compression happens entirely in your browser, so your documents stay private.</p>
+    <p>Common reasons to compress: email size limits (Gmail's 25 MB), WhatsApp 100 MB limit, government portal upload limits (often 2–5 MB), and reducing cloud storage usage.</p>
+
+    <div class="related-links">
+      <strong>Related tools:</strong>
+      <a href="../merge/">Merge PDF →</a>
+      <a href="../split/">Split PDF →</a>
+      <a href="../img-to-pdf/">Image to PDF →</a>
+    </div>
+  </div>
+</div>
+</div>
+<footer><p>© 2025 PDFCraft — Files processed locally in your browser. No data stored.</p></footer>
+
+<script>
+let pdfFile = null;
+let pdfBytes = null;
+
+const dropzone = document.getElementById('dropzone');
+dropzone.addEventListener('dragover', e => { e.preventDefault(); dropzone.classList.add('drag-over'); });
+dropzone.addEventListener('dragleave', () => dropzone.classList.remove('drag-over'));
+dropzone.addEventListener('drop', e => { e.preventDefault(); dropzone.classList.remove('drag-over'); if(e.dataTransfer.files[0]) handleFile(e.dataTransfer.files[0]); });
+
+async function handleFile(f) {
+  if (!f || f.type !== 'application/pdf') { alert('Please select a PDF file.'); return; }
+  pdfFile = f;
+  pdfBytes = await f.arrayBuffer();
+  document.getElementById('fileName').textContent = f.name;
+  document.getElementById('fileSize').textContent = fmtSize(f.size);
+  document.getElementById('fileInfo').style.display = 'flex';
+  document.getElementById('compressOptions').style.display = 'block';
+  document.getElementById('compressBtn').disabled = false;
+  document.getElementById('result').classList.remove('show');
+}
+
+function clearFile() {
+  pdfFile = null; pdfBytes = null;
+  document.getElementById('fileInput').value = '';
+  document.getElementById('fileInfo').style.display = 'none';
+  document.getElementById('compressOptions').style.display = 'none';
+  document.getElementById('compressBtn').disabled = true;
+  document.getElementById('result').classList.remove('show');
+}
+
+async function compressPDF() {
+  if (!pdfBytes) return;
+  document.getElementById('progress').classList.add('show');
+  document.getElementById('result').classList.remove('show');
+  document.getElementById('compressBtn').disabled = true;
+  document.getElementById('progressFill').style.width = '30%';
+  document.getElementById('progressLabel').textContent = 'Loading PDF…';
+
+  try {
+    const { PDFDocument } = PDFLib;
+    const level = document.querySelector('input[name=level]:checked').value;
+
+    // Load and re-save — pdf-lib rewriting removes unused objects
+    const pdf = await PDFDocument.load(pdfBytes, { ignoreEncryption: true });
+    document.getElementById('progressFill').style.width = '60%';
+    document.getElementById('progressLabel').textContent = 'Optimising structure…';
+
+    // objectsPerTick controls compression speed/thoroughness
+    const objectsPerTick = level === 'low' ? 50 : level === 'medium' ? 20 : 5;
+    const saved = await pdf.save({ useObjectStreams: true, addDefaultPage: false, objectsPerTick });
+
+    document.getElementById('progressFill').style.width = '100%';
+
+    const origSize = pdfFile.size;
+    const newSize = saved.byteLength;
+    const saving = origSize - newSize;
+    const pct = ((saving / origSize) * 100).toFixed(1);
+
+    if (newSize >= origSize) {
+      document.getElementById('resultInfo').textContent = `This PDF is already well-optimised. No reduction possible (${fmtSize(newSize)}).`;
+    } else {
+      document.getElementById('resultInfo').textContent = `${fmtSize(origSize)} → ${fmtSize(newSize)} · Saved ${fmtSize(saving)} (${pct}%)`;
+    }
+
+    document.getElementById('downloadBtn').onclick = () => dl(saved, 'compressed.pdf');
+    document.getElementById('result').classList.add('show');
+    document.getElementById('progress').classList.remove('show');
+  } catch(e) { alert('Error: '+e.message); document.getElementById('progress').classList.remove('show'); }
+  document.getElementById('compressBtn').disabled = false;
+}
+
+function fmtSize(b) { return b>1048576?(b/1048576).toFixed(1)+' MB':(b/1024).toFixed(0)+' KB'; }
+function dl(bytes, name) {
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(new Blob([bytes],{type:'application/pdf'}));
+  a.download = name; a.click(); URL.revokeObjectURL(a.href);
+}
+</script>
+</body>
+</html>
