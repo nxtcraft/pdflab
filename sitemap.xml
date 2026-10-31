@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url><loc>https://nxtcraft.github.io/pdfcraft/</loc><priority>1.0</priority><changefreq>monthly</changefreq></url>
-  <url><loc>https://nxtcraft.github.io/pdfcraft/merge/</loc><priority>0.9</priority><changefreq>monthly</changefreq></url>
-  <url><loc>https://nxtcraft.github.io/pdfcraft/split/</loc><priority>0.9</priority><changefreq>monthly</changefreq></url>
-  <url><loc>https://nxtcraft.github.io/pdfcraft/compress/</loc><priority>0.9</priority><changefreq>monthly</changefreq></url>
-  <url><loc>https://nxtcraft.github.io/pdfcraft/img-to-pdf/</loc><priority>0.9</priority><changefreq>monthly</changefreq></url>
-  <url><loc>https://nxtcraft.github.io/pdfcraft/pdf-to-img/</loc><priority>0.8</priority><changefreq>monthly</changefreq></url>
-  <url><loc>https://nxtcraft.github.io/pdfcraft/rotate/</loc><priority>0.8</priority><changefreq>monthly</changefreq></url>
-  <url><loc>https://nxtcraft.github.io/pdfcraft/word-to-pdf/</loc><priority>0.9</priority><changefreq>monthly</changefreq></url>
-  <url><loc>https://nxtcraft.github.io/pdfcraft/pdf-to-word/</loc><priority>0.9</priority><changefreq>monthly</changefreq></url>
+  <url><loc>https://nxtcraft.github.io/pdflab/</loc><priority>1.0</priority><changefreq>monthly</changefreq></url>
+  <url><loc>https://nxtcraft.github.io/pdflab/merge/</loc><priority>0.9</priority><changefreq>monthly</changefreq></url>
+  <url><loc>https://nxtcraft.github.io/pdflab/split/</loc><priority>0.9</priority><changefreq>monthly</changefreq></url>
+  <url><loc>https://nxtcraft.github.io/pdflab/compress/</loc><priority>0.9</priority><changefreq>monthly</changefreq></url>
+  <url><loc>https://nxtcraft.github.io/pdflab/img-to-pdf/</loc><priority>0.9</priority><changefreq>monthly</changefreq></url>
+  <url><loc>https://nxtcraft.github.io/pdflab/pdf-to-img/</loc><priority>0.8</priority><changefreq>monthly</changefreq></url>
+  <url><loc>https://nxtcraft.github.io/pdflab/rotate/</loc><priority>0.8</priority><changefreq>monthly</changefreq></url>
+  <url><loc>https://nxtcraft.github.io/pdflab/word-to-pdf/</loc><priority>0.9</priority><changefreq>monthly</changefreq></url>
+  <url><loc>https://nxtcraft.github.io/pdflab/pdf-to-word/</loc><priority>0.9</priority><changefreq>monthly</changefreq></url>
 </urlset>
