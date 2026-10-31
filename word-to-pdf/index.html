@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Word to PDF Converter — Convert DOCX to PDF Free Online | PDFCraft</title>
+<meta name="description" content="Convert Word documents (.docx) to PDF free online. No signup, no upload to server — conversion happens in your browser. Preserve formatting, fonts and images.">
+<meta name="keywords" content="word to pdf, docx to pdf, convert word to pdf free, word to pdf converter online, docx to pdf converter free, convert doc to pdf, word document to pdf online free">
+<link rel="canonical" href="https://nxtcraft.github.io/pdfcraft/word-to-pdf/">
+<meta property="og:title" content="Word to PDF Converter — Free, No Upload | PDFCraft">
+<meta property="og:description" content="Convert .docx files to PDF instantly. Runs in your browser — your document never leaves your device. Free, no signup.">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="robots" content="index, follow">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"Word to PDF Converter","url":"https://nxtcraft.github.io/pdfcraft/word-to-pdf/","applicationCategory":"UtilitiesApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"0","priceCurrency":"INR"},"description":"Convert Word .docx files to PDF free in your browser. No upload, no signup."}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "How do I convert Word to PDF for free?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Upload your .docx file using PDFCraft's Word to PDF converter. The tool reads the file in your browser, converts it to HTML, then generates a PDF using your browser's print engine. Click Download PDF to save the result. It's completely free and your document never leaves your device." }
+    },
+    {
+      "@type": "Question",
+      "name": "Does Word to PDF preserve formatting?",
+      "acceptedAnswer": { "@type": "Answer", "text": "This converter preserves headings, paragraphs, bold/italic text, lists, and basic tables from .docx files. Complex elements like custom fonts, text boxes, tracked changes, and embedded Excel charts may not convert perfectly. For pixel-perfect conversion with complex layouts, use Microsoft Word's built-in Save as PDF or Google Docs export." }
+    },
+    {
+      "@type": "Question",
+      "name": "Is it safe to convert Word documents online?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Yes — PDFCraft converts files entirely in your browser using the mammoth.js library. Your document is never uploaded to any server. All processing happens locally on your device, which means sensitive documents (contracts, financial reports, personal data) remain completely private." }
+    },
+    {
+      "@type": "Question",
+      "name": "Can I convert .doc files (older Word format)?",
+      "acceptedAnswer": { "@type": "Answer", "text": "This tool supports .docx files (Word 2007 and later). For older .doc files (Word 97–2003), open the file in Word or LibreOffice and save it as .docx first, then convert using this tool. Alternatively, use Microsoft Word's built-in Save as PDF or Print to PDF option." }
+    }
+  ]
+}
+</script>
+<link rel="stylesheet" href="../css/main.css">
+<!-- mammoth.js for DOCX parsing -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js"></script>
+<!-- jsPDF for PDF generation -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<style>
+.preview-box {
+  background: #fff;
+  border: 1.5px solid var(--border);
+  border-radius: 12px;
+  padding: 24px 28px;
+  margin: 20px 0;
+  max-height: 480px;
+  overflow-y: auto;
+  font-size: 14px;
+  line-height: 1.8;
+  color: #18181b;
+}
+.preview-box h1,.preview-box h2,.preview-box h3 { margin: 14px 0 6px; font-weight: 700; }
+.preview-box p { margin-bottom: 10px; }
+.preview-box ul,.preview-box ol { padding-left: 20px; margin-bottom: 10px; }
+.preview-box table { border-collapse: collapse; width: 100%; margin-bottom: 10px; font-size: 13px; }
+.preview-box td,.preview-box th { border: 1px solid #e4e4e7; padding: 6px 10px; }
+.conversion-warn { background: #fef9c3; border: 1px solid #fde047; border-radius: 8px; padding: 10px 14px; font-size: 13px; color: #854d0e; margin-bottom: 12px; display: none; }
+.print-area { display: none; }
+</style>
+</head>
+<body>
+<nav>
+  <a class="nav-logo" href="../index.html"><span class="pdf-icon">PDF</span>Craft</a>
+  <div class="nav-links">
+    <a href="../merge/">Merge</a>
+    <a href="../split/">Split</a>
+    <a href="../compress/">Compress</a>
+    <a href="../img-to-pdf/">Image→PDF</a>
+  </div>
+</nav>
+
+<div class="container">
+<div class="tool-page">
+  <a class="back-link" href="../index.html">← All PDF Tools</a>
+  <h1 class="tool-title">📝 Word to PDF Converter</h1>
+  <p class="tool-desc">Convert .docx Word documents to PDF — free, instant, and private. Your file never leaves your browser.</p>
+
+  <div class="dropzone" id="dropzone">
+    <div class="dropzone-icon">📄</div>
+    <div class="dropzone-text">Drop your .docx file here or click to select</div>
+    <div class="dropzone-sub">Supports .docx (Word 2007+) · Max 10 MB</div>
+    <input type="file" id="fileInput" accept=".docx" style="display:none">
+  </div>
+
+  <div class="conversion-warn" id="warn">
+    ⚠️ Some formatting may differ from the original. Complex elements (text boxes, custom fonts, embedded charts) may not convert perfectly.
+  </div>
+
+  <div id="preview-section" style="display:none;">
+    <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:10px; flex-wrap:wrap; gap:8px;">
+      <div style="font-size:13px; font-weight:700; color:#52525b;" id="file-name-label">Document preview</div>
+      <div style="display:flex; gap:8px;">
+        <button class="action-btn secondary" onclick="resetTool()">Choose different file</button>
+        <button class="action-btn" id="downloadBtn" onclick="downloadPDF()">⬇ Download PDF</button>
+      </div>
+    </div>
+    <div class="preview-box" id="preview-content"></div>
+  </div>
+
+  <div id="loading" style="display:none; text-align:center; padding:32px; color:var(--muted);">
+    <div style="font-size:28px; margin-bottom:8px;">⏳</div>
+    <div>Converting document…</div>
+  </div>
+
+  <div class="tips" style="margin-top:20px;">
+    <h3>Tips for best results</h3>
+    <ul>
+      <li>Works best with text-heavy documents: reports, proposals, letters, CVs</li>
+      <li>Headings, bold, italic, lists, and basic tables convert accurately</li>
+      <li>Complex layouts (multi-column, text boxes) may simplify</li>
+      <li>For pixel-perfect output, use <strong>File → Save as PDF</strong> in Microsoft Word</li>
+    </ul>
+  </div>
+
+  <div style="display:flex; gap:10px; flex-wrap:wrap; margin-top:18px; font-size:12px; color:var(--muted);">
+    Also try:
+    <a href="../img-to-pdf/" style="color:var(--accent);">Image to PDF</a> ·
+    <a href="../compress/" style="color:var(--accent);">Compress PDF</a> ·
+    <a href="../merge/" style="color:var(--accent);">Merge PDF</a>
+  </div>
+</div>
+
+<!-- SEO section -->
+<div class="seo-section" style="margin-top:32px; padding:28px 0; border-top:1px solid var(--border);">
+  <h2>Word to PDF Converter — Free, Private & No Signup</h2>
+  <p>Converting a Word document to PDF used to mean opening Microsoft Word, going to File → Save As, and hoping the formatting survived. PDFCraft's Word to PDF converter does this in your browser — no software, no upload, no account.</p>
+
+  <h3>How it works</h3>
+  <p>When you select a .docx file, the tool uses <strong>mammoth.js</strong> — an open-source library — to read your Word document and convert it to clean HTML directly in your browser. Your browser's PDF print engine then renders that HTML into a downloadable PDF. No bytes are sent to any server at any point.</p>
+
+  <h3>What formats are supported?</h3>
+  <ul>
+    <li><strong>.docx</strong> (Word 2007 and later) ✅ — fully supported</li>
+    <li><strong>.doc</strong> (Word 97–2003) ❌ — open in Word first and save as .docx</li>
+    <li><strong>.odt</strong> (LibreOffice) ❌ — export from LibreOffice as .docx first</li>
+    <li><strong>.rtf</strong> ❌ — open in Word and save as .docx</li>
+  </ul>
+
+  <h3>When to use browser conversion vs Microsoft Word</h3>
+  <p><strong>Use PDFCraft when:</strong> you don't have Word installed, you're on a shared/public computer, you need a quick conversion without software, or you want guaranteed privacy (no cloud upload).</p>
+  <p><strong>Use Microsoft Word's Save as PDF when:</strong> your document has complex layouts, custom fonts, embedded charts, tracked changes, or text boxes. Word's built-in conversion is pixel-perfect for complex documents.</p>
+
+  <h3>Common Word to PDF questions</h3>
+  <details style="margin-bottom:8px; border:1px solid var(--border); border-radius:8px; overflow:hidden;">
+    <summary style="padding:12px 14px; cursor:pointer; font-weight:600; font-size:14px;">Why does my Word document look different in PDF?</summary>
+    <p style="padding:0 14px 12px; font-size:13px; color:#52525b; line-height:1.7;">Browser-based conversion uses HTML rendering, which may differ from Word's native rendering engine. Differences include: line spacing, paragraph spacing, custom fonts (replaced with system fonts), and complex table layouts. For critical documents, use Word's built-in Save as PDF or Google Docs export for the most accurate result.</p>
+  </details>
+  <details style="margin-bottom:8px; border:1px solid var(--border); border-radius:8px; overflow:hidden;">
+    <summary style="padding:12px 14px; cursor:pointer; font-weight:600; font-size:14px;">Is my document private?</summary>
+    <p style="padding:0 14px 12px; font-size:13px; color:#52525b; line-height:1.7;">Yes, completely. PDFCraft runs entirely in your browser. Your .docx file is read by JavaScript running on your device — no bytes are sent to any server. This is especially important for sensitive documents like contracts, salary letters, and personal reports.</p>
+  </details>
+  <details style="border:1px solid var(--border); border-radius:8px; overflow:hidden;">
+    <summary style="padding:12px 14px; cursor:pointer; font-weight:600; font-size:14px;">What is the maximum file size?</summary>
+    <p style="padding:0 14px 12px; font-size:13px; color:#52525b; line-height:1.7;">The recommended maximum is 10 MB. Larger files may slow down conversion since everything runs in your browser. Most text-based Word documents are well under 1 MB; only documents with many embedded images get close to the 10 MB limit.</p>
+  </details>
+</div>
+</div>
+
+<!-- Hidden print area for PDF generation -->
+<div class="print-area" id="print-area"></div>
+
+<footer><p>&copy; 2026 PDFCraft · <a href="https://nxtcraft.github.io/">NxtCraft Tools</a> · Files never leave your browser</p></footer>
+
+<script>
+const dropzone = document.getElementById('dropzone');
+const fileInput = document.getElementById('fileInput');
+let htmlContent = '';
+let currentFileName = '';
+
+dropzone.addEventListener('click', () => fileInput.click());
+dropzone.addEventListener('dragover', e => { e.preventDefault(); dropzone.classList.add('dragover'); });
+dropzone.addEventListener('dragleave', () => dropzone.classList.remove('dragover'));
+dropzone.addEventListener('drop', e => {
+  e.preventDefault();
+  dropzone.classList.remove('dragover');
+  const file = e.dataTransfer.files[0];
+  if (file) processFile(file);
+});
+fileInput.addEventListener('change', e => {
+  if (e.target.files[0]) processFile(e.target.files[0]);
+});
+
+function processFile(file) {
+  if (!file.name.endsWith('.docx')) {
+    alert('Please select a .docx file. For .doc files, open in Word and save as .docx first.');
+    return;
+  }
+  if (file.size > 10 * 1024 * 1024) {
+    alert('File too large. Please use a file under 10 MB.');
+    return;
+  }
+
+  currentFileName = file.name.replace(/\.docx$/i, '');
+  dropzone.style.display = 'none';
+  document.getElementById('loading').style.display = 'block';
+
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    mammoth.convertToHtml({ arrayBuffer: e.target.result })
+      .then(result => {
+        htmlContent = result.value;
+        const warnings = result.messages.filter(m => m.type === 'warning');
+
+        document.getElementById('loading').style.display = 'none';
+        document.getElementById('preview-section').style.display = 'block';
+        document.getElementById('preview-content').innerHTML = htmlContent;
+        document.getElementById('file-name-label').textContent = file.name;
+
+        if (warnings.length > 0) {
+          document.getElementById('warn').style.display = 'block';
+        }
+      })
+      .catch(err => {
+        document.getElementById('loading').style.display = 'none';
+        dropzone.style.display = '';
+        alert('Could not read this file. Make sure it is a valid .docx document.');
+        console.error(err);
+      });
+  };
+  reader.readAsArrayBuffer(file);
+}
+
+function downloadPDF() {
+  const btn = document.getElementById('downloadBtn');
+  btn.textContent = '⏳ Generating PDF…';
+  btn.disabled = true;
+
+  // Use browser print to PDF for best fidelity
+  const printArea = document.getElementById('print-area');
+  printArea.innerHTML = `
+    <style>
+      body { font-family: -apple-system, Arial, sans-serif; font-size: 12pt; line-height: 1.6; color: #000; margin: 0; }
+      h1 { font-size: 20pt; } h2 { font-size: 16pt; } h3 { font-size: 13pt; }
+      p { margin-bottom: 8pt; }
+      ul, ol { padding-left: 18pt; margin-bottom: 8pt; }
+      table { border-collapse: collapse; width: 100%; } td, th { border: 1px solid #ccc; padding: 5pt 8pt; font-size: 10pt; }
+    </style>
+    ${htmlContent}
+  `;
+
+  // Trigger print dialog (user selects PDF printer)
+  const iframe = document.createElement('iframe');
+  iframe.style.cssText = 'position:fixed;right:0;bottom:0;width:0;height:0;border:0;opacity:0;';
+  document.body.appendChild(iframe);
+  iframe.contentWindow.document.open();
+  iframe.contentWindow.document.write(`<!DOCTYPE html><html><head><title>${currentFileName}</title>
+    <style>
+      @media print { body { margin: 1cm; font-family: Arial, sans-serif; font-size: 11pt; line-height: 1.6; color: #000; } }
+      h1{font-size:20pt;margin:0 0 10pt} h2{font-size:15pt;margin:14pt 0 6pt} h3{font-size:12pt;margin:10pt 0 4pt}
+      p{margin-bottom:8pt} ul,ol{padding-left:18pt;margin-bottom:8pt}
+      table{border-collapse:collapse;width:100%} td,th{border:1px solid #ccc;padding:4pt 8pt;font-size:10pt}
+      strong{font-weight:bold} em{font-style:italic}
+    </style>
+    </head><body>${htmlContent}</body></html>`);
+  iframe.contentWindow.document.close();
+
+  setTimeout(() => {
+    iframe.contentWindow.focus();
+    iframe.contentWindow.print();
+    document.body.removeChild(iframe);
+    btn.textContent = '⬇ Download PDF';
+    btn.disabled = false;
+  }, 500);
+}
+
+function resetTool() {
+  htmlContent = '';
+  currentFileName = '';
+  document.getElementById('preview-section').style.display = 'none';
+  document.getElementById('warn').style.display = 'none';
+  dropzone.style.display = '';
+  fileInput.value = '';
+}
+</script>
+</body>
+</html>
