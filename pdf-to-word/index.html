@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PDF to Word Converter — Free, No Upload | PDFCraft</title>
+<meta name="description" content="Convert PDF to Word (DOCX) free online. Extracts text from PDF and creates an editable Word document — no upload, no signup, works in your browser.">
+<meta name="keywords" content="pdf to word converter free, pdf to docx online, convert pdf to word, pdf to word no signup, free pdf to word converter, extract text from pdf, pdf to editable word">
+<link rel="canonical" href="https://nxtcraft.github.io/pdfcraft/pdf-to-word/">
+<meta property="og:title" content="PDF to Word Converter — Free, No Upload | PDFCraft">
+<meta property="og:description" content="Convert PDF to editable Word document free. No file upload — everything runs in your browser. Download .docx instantly.">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="stylesheet" href="../css/main.css">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "PDF to Word Converter",
+  "url": "https://nxtcraft.github.io/pdfcraft/pdf-to-word/",
+  "description": "Free client-side PDF to Word converter. Extracts text and creates a .docx file — no upload required.",
+  "applicationCategory": "UtilitiesApplication",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "INR" }
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "Is this PDF to Word converter free?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Yes, completely free. No signup, no watermark, no file size limit from our side (browser memory is the practical limit). Your file never leaves your device." }
+    },
+    {
+      "@type": "Question",
+      "name": "Does my PDF file get uploaded to a server?",
+      "acceptedAnswer": { "@type": "Answer", "text": "No. This converter runs entirely in your browser using JavaScript. Your PDF file is never sent to any server. This makes it safe for confidential documents like contracts, financial statements, and personal records." }
+    },
+    {
+      "@type": "Question",
+      "name": "Will the Word document preserve the original formatting?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Text content and page breaks are preserved. Complex PDF formatting like multi-column layouts, tables, and images may not convert perfectly — PDFs are fixed-layout documents and don't store formatting in an editable way. For simple text-heavy PDFs, the output is clean and editable. For complex PDFs with heavy design, some layout adjustment in Word may be needed after conversion." }
+    },
+    {
+      "@type": "Question",
+      "name": "What types of PDFs work best with this converter?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Text-based PDFs work best: scanned documents (image-only PDFs) cannot be converted without OCR, which this tool does not currently support. Reports, articles, contracts, and text documents convert well. Highly designed brochures or PDFs with complex layouts will lose their visual structure but preserve all text content." }
+    }
+  ]
+}
+</script>
+<style>
+  .upload-zone { border: 2.5px dashed #e2d9f3; border-radius: 16px; padding: 48px 24px; text-align: center; cursor: pointer; transition: all .18s; background: #faf8ff; }
+  .upload-zone:hover, .upload-zone.drag-over { border-color: #7c3aed; background: #f5f0ff; }
+  .upload-zone input { display: none; }
+  .upload-icon { font-size: 40px; margin-bottom: 10px; }
+  .upload-text { font-size: 16px; font-weight: 700; color: #1e1b4b; margin-bottom: 6px; }
+  .upload-sub { font-size: 13px; color: #6d28d9; }
+  .status-bar { background: #f5f3ff; border-radius: 10px; padding: 14px 18px; margin-top: 18px; font-size: 14px; color: #3730a3; display: none; }
+  .page-list { list-style: none; padding: 0; margin: 0; max-height: 280px; overflow-y: auto; }
+  .page-item { display: flex; align-items: flex-start; gap: 10px; padding: 10px 14px; border-bottom: 1px solid #ede9fe; font-size: 12px; }
+  .page-label { font-weight: 700; color: #6d28d9; white-space: nowrap; min-width: 52px; }
+  .page-text { color: #3730a3; line-height: 1.5; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; }
+  .btn-dl { display: none; width: 100%; padding: 14px; background: #7c3aed; color: white; border: none; border-radius: 12px; font-size: 16px; font-weight: 700; cursor: pointer; margin-top: 16px; transition: background .15s; }
+  .btn-dl:hover { background: #6d28d9; }
+  .warning-note { background: #fef3c7; border-left: 3px solid #d97706; border-radius: 8px; padding: 10px 14px; font-size: 13px; color: #92400e; margin-top: 12px; display: none; }
+  .progress-bar-wrap { background: #e0e7ff; border-radius: 6px; height: 8px; margin-top: 8px; overflow: hidden; }
+  .progress-bar { background: #7c3aed; height: 100%; width: 0%; transition: width .2s; border-radius: 6px; }
+</style>
+</head>
+<body>
+<div class="site-header">
+  <a href="../" style="text-decoration:none;"><div class="logo">PDF<span>Craft</span></div></a>
+  <nav class="tool-nav">
+    <a href="../split/">✂️ Split</a>
+    <a href="../merge/">🔗 Merge</a>
+    <a href="../compress/">🗜️ Compress</a>
+    <a href="../rotate/">🔄 Rotate</a>
+    <a href="../pdf-to-img/">🖼️ PDF→Image</a>
+    <a href="../img-to-pdf/">📷 Image→PDF</a>
+    <a href="../word-to-pdf/">📝 Word→PDF</a>
+    <a href="../pdf-to-word/" class="active">📄 PDF→Word</a>
+  </nav>
+</div>
+
+<div class="container" style="max-width:680px;">
+  <h1 style="font-size:24px; font-weight:800; margin-bottom:4px; color:#1e1b4b;">PDF to Word Converter</h1>
+  <p style="font-size:14px; color:#6d28d9; margin-bottom:22px;">Convert PDF to editable .docx — runs in your browser, no upload, no signup</p>
+
+  <div class="upload-zone" id="drop-zone" onclick="document.getElementById('file-input').click()">
+    <input type="file" id="file-input" accept=".pdf,application/pdf" onchange="handleFile(this.files[0])">
+    <div class="upload-icon">📄</div>
+    <div class="upload-text">Drop your PDF here or click to browse</div>
+    <div class="upload-sub">Supports text-based PDFs up to ~50 MB · File stays on your device</div>
+  </div>
+
+  <div class="status-bar" id="status-bar">
+    <div id="status-text">Processing…</div>
+    <div class="progress-bar-wrap"><div class="progress-bar" id="progress-bar"></div></div>
+  </div>
+
+  <div class="warning-note" id="warn-note">
+    ⚠️ Some pages may have limited text — this PDF may contain images or scanned pages. OCR (image-to-text) is not supported.
+  </div>
+
+  <div id="preview-wrap" style="display:none; margin-top:18px;">
+    <div style="font-size:13px; font-weight:700; color:#3730a3; margin-bottom:8px;" id="preview-title">Preview</div>
+    <div style="background:#faf8ff; border:1px solid #e0e7ff; border-radius:12px; overflow:hidden;">
+      <ul class="page-list" id="page-list"></ul>
+    </div>
+  </div>
+
+  <button class="btn-dl" id="btn-dl" onclick="downloadDocx()">⬇️ Download Word (.docx)</button>
+
+  <div style="margin-top:28px; background:#f5f3ff; border-radius:12px; padding:16px 18px; font-size:13px; color:#4338ca; line-height:1.7;">
+    <strong>What converts well:</strong> contracts, reports, articles, text-heavy documents<br>
+    <strong>What may lose layout:</strong> brochures, multi-column PDFs, PDFs with embedded images<br>
+    <strong>Scanned PDFs:</strong> not supported (these are images — text extraction not possible without OCR)
+  </div>
+
+  <!-- SEO SECTION -->
+  <div class="seo-section" style="margin-top:32px;">
+    <h2>Free PDF to Word Converter — How It Works</h2>
+    <p>Most online PDF to Word converters upload your file to a remote server. This tool is different — conversion happens entirely inside your browser using JavaScript. Your PDF never leaves your device, making it safe for sensitive documents: contracts, financial records, legal documents, HR files.</p>
+
+    <h3>How to convert PDF to Word</h3>
+    <ol>
+      <li>Drop your PDF file into the upload area (or click to browse)</li>
+      <li>The tool extracts text from each page using pdf.js (Mozilla's PDF rendering library)</li>
+      <li>Text is packaged into a valid .docx file (Word Open XML format) in your browser</li>
+      <li>Click Download — your Word file is ready instantly</li>
+    </ol>
+
+    <h3>Why does formatting sometimes differ?</h3>
+    <p>PDFs are "fixed layout" documents — they store instructions for how to render pixels on screen, not editable text with formatting codes. A PDF with bold text stores the visual appearance of bold characters, not a "make this bold" instruction Word understands. This tool extracts all text content faithfully, but complex visual layouts (multi-column, tables, text overlapping images) are simplified into flowing paragraphs in the output Word document.</p>
+
+    <h3>When to use PDF to Word</h3>
+    <ul>
+      <li>Edit a contract or agreement you received as a PDF</li>
+      <li>Update an old report saved as PDF when you lost the original Word file</li>
+      <li>Extract and reuse text content from a PDF article or paper</li>
+      <li>Convert a form or template PDF into an editable Word document</li>
+    </ul>
+
+    <details style="margin-bottom:8px; border:1px solid #e0e7ff; border-radius:8px; overflow:hidden;">
+      <summary style="padding:12px 14px; cursor:pointer; font-weight:600; font-size:14px; color:#1e1b4b;">Can I convert a scanned PDF?</summary>
+      <p style="padding:0 14px 12px; font-size:13px; color:#4338ca; line-height:1.7;">Scanned PDFs are images — there is no text layer to extract. Converting them requires OCR (Optical Character Recognition) which analyses the image and recognises characters. This tool does not include OCR. For scanned PDFs, try Google Drive (upload → Open with Google Docs) or Adobe Acrobat's OCR feature. Both recognise scanned text and export to Word.</p>
+    </details>
+    <details style="border:1px solid #e0e7ff; border-radius:8px; overflow:hidden;">
+      <summary style="padding:12px 14px; cursor:pointer; font-weight:600; font-size:14px; color:#1e1b4b;">Is this tool safe for confidential PDFs?</summary>
+      <p style="padding:0 14px 12px; font-size:13px; color:#4338ca; line-height:1.7;">Yes — your file never leaves your device. Unlike most online converters that upload your PDF to a cloud server (where it may be stored or processed), this tool runs entirely in your browser. The PDF is read into browser memory, converted to text by JavaScript, and the Word file is generated locally. No network request is made with your file content.</p>
+    </details>
+
+    <div style="margin-top:20px; font-size:12px; color:#6d28d9;">
+      Also try: <a href="../word-to-pdf/" style="color:#7c3aed;">Word to PDF</a> ·
+      <a href="../compress/" style="color:#7c3aed;">Compress PDF</a> ·
+      <a href="../pdf-to-img/" style="color:#7c3aed;">PDF to Image</a> ·
+      <a href="../" style="color:#7c3aed;">All PDF Tools</a>
+    </div>
+  </div>
+</div>
+
+<footer style="text-align:center; padding:24px; font-size:12px; color:#6d28d9; border-top:1px solid #e8e0f8; margin-top:40px;">
+  &copy; 2026 PDFCraft · <a href="https://nxtcraft.github.io/">NxtCraft Tools</a>
+</footer>
+
+<!-- pdf.js CDN -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<!-- JSZip CDN for DOCX packaging -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+
+<script>
+pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+
+let pagesData = [];
+let fileName = 'document';
+
+// Drag-drop
+const dz = document.getElementById('drop-zone');
+dz.addEventListener('dragover', e => { e.preventDefault(); dz.classList.add('drag-over'); });
+dz.addEventListener('dragleave', () => dz.classList.remove('drag-over'));
+dz.addEventListener('drop', e => { e.preventDefault(); dz.classList.remove('drag-over'); const f = e.dataTransfer.files[0]; if (f) handleFile(f); });
+
+function setStatus(msg, pct) {
+  const sb = document.getElementById('status-bar');
+  sb.style.display = 'block';
+  document.getElementById('status-text').textContent = msg;
+  document.getElementById('progress-bar').style.width = pct + '%';
+}
+
+async function handleFile(file) {
+  if (!file || file.type !== 'application/pdf') { alert('Please select a PDF file.'); return; }
+  fileName = file.name.replace(/\.pdf$/i, '');
+  pagesData = [];
+
+  document.getElementById('page-list').innerHTML = '';
+  document.getElementById('preview-wrap').style.display = 'none';
+  document.getElementById('btn-dl').style.display = 'none';
+  document.getElementById('warn-note').style.display = 'none';
+  setStatus('Loading PDF…', 5);
+
+  const arrayBuffer = await file.arrayBuffer();
+  const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+  const numPages = pdf.numPages;
+  let lowTextPages = 0;
+
+  for (let i = 1; i <= numPages; i++) {
+    setStatus(`Extracting page ${i} of ${numPages}…`, Math.round(5 + (i / numPages) * 85));
+    const page = await pdf.getPage(i);
+    const textContent = await page.getTextContent();
+    const text = textContent.items.map(item => item.str).join(' ').trim();
+    pagesData.push({ page: i, text });
+    if (text.length < 20) lowTextPages++;
+  }
+
+  setStatus('Done! ' + numPages + ' page' + (numPages > 1 ? 's' : '') + ' extracted.', 100);
+
+  if (lowTextPages > numPages / 2) {
+    document.getElementById('warn-note').style.display = 'block';
+  }
+
+  renderPreview();
+  document.getElementById('preview-wrap').style.display = '';
+  document.getElementById('preview-title').textContent = 'Preview (' + numPages + ' page' + (numPages > 1 ? 's' : '') + ')';
+  document.getElementById('btn-dl').style.display = 'block';
+}
+
+function renderPreview() {
+  const ul = document.getElementById('page-list');
+  ul.innerHTML = '';
+  pagesData.forEach(p => {
+    const li = document.createElement('li');
+    li.className = 'page-item';
+    li.innerHTML = `<span class="page-label">Page ${p.page}</span><span class="page-text">${p.text ? escHtml(p.text.substring(0, 200)) : '<em style="color:#aaa">No text detected</em>'}</span>`;
+    ul.appendChild(li);
+  });
+}
+
+function escHtml(s) {
+  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+function escXml(s) {
+  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&apos;');
+}
+
+async function downloadDocx() {
+  if (!pagesData.length) return;
+  const btn = document.getElementById('btn-dl');
+  btn.textContent = 'Generating Word file…';
+  btn.disabled = true;
+
+  // Build word/document.xml paragraphs
+  let body = '';
+  pagesData.forEach((p, idx) => {
+    // Split text into lines/paragraphs
+    const lines = p.text.split(/\n+/).filter(l => l.trim());
+    if (lines.length === 0) {
+      body += '<w:p><w:r><w:t></w:t></w:r></w:p>';
+    } else {
+      lines.forEach(line => {
+        body += `<w:p><w:r><w:t xml:space="preserve">${escXml(line)}</w:t></w:r></w:p>`;
+      });
+    }
+    // Page break between pages (except last)
+    if (idx < pagesData.length - 1) {
+      body += '<w:p><w:r><w:br w:type="page"/></w:r></w:p>';
+    }
+  });
+
+  const docXml = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<w:document xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main">
+  <w:body>
+${body}
+    <w:sectPr><w:pgSz w:w="12240" w:h="15840"/><w:pgMar w:top="1440" w:right="1440" w:bottom="1440" w:left="1440"/></w:sectPr>
+  </w:body>
+</w:document>`;
+
+  const relsXml = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">
+  <Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="word/document.xml"/>
+</Relationships>`;
+
+  const docRelsXml = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">
+</Relationships>`;
+
+  const contentTypesXml = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types">
+  <Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/>
+  <Default Extension="xml" ContentType="application/xml"/>
+  <Override PartName="/word/document.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.document.main+xml"/>
+</Types>`;
+
+  const zip = new JSZip();
+  zip.file('[Content_Types].xml', contentTypesXml);
+  zip.file('_rels/.rels', relsXml);
+  zip.folder('word').file('document.xml', docXml);
+  zip.folder('word').folder('_rels').file('document.xml.rels', docRelsXml);
+
+  const blob = await zip.generateAsync({ type: 'blob', mimeType: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = fileName + '.docx';
+  a.click();
+  URL.revokeObjectURL(url);
+
+  btn.textContent = '⬇️ Download Word (.docx)';
+  btn.disabled = false;
+}
+</script>
+</body>
+</html>
