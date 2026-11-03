@@ -111,7 +111,7 @@ async function handleFile(f) {
   if (!f || f.type !== 'application/pdf') { alert('Please select a PDF file.'); return; }
   pdfFile = f;
   const bytes = await f.arrayBuffer();
-  pdfDoc = await PDFLib.PDFDocument.load(bytes);
+  pdfDoc = await PDFLib.PDFDocument.load(bytes, { ignoreEncryption: true });
   const n = pdfDoc.getPageCount();
   document.getElementById('fileName').textContent = f.name;
   document.getElementById('fileSize').textContent = fmtSize(f.size);

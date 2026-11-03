@@ -140,7 +140,7 @@ async function mergePDFs() {
     for (let i = 0; i < files.length; i++) {
       setProgress(10 + Math.round((i / files.length) * 70), `Processing ${files[i].name}…`);
       const bytes = await files[i].arrayBuffer();
-      const pdf = await PDFDocument.load(bytes);
+      const pdf = await PDFDocument.load(bytes, { ignoreEncryption: true });
       const pages = await merged.copyPages(pdf, pdf.getPageIndices());
       pages.forEach(p => merged.addPage(p));
     }

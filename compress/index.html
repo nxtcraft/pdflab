@@ -10,6 +10,7 @@
   <meta property="og:url" content="https://nxtcraft.github.io/pdfcraft/compress/">
   <meta name="robots" content="index, follow">
   <link rel="stylesheet" href="../css/main.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
 </head>
 <body>
@@ -95,6 +96,13 @@
 <footer><p>© 2026 PDFCraft — Files processed locally in your browser. No data stored.</p></footer>
 
 <script>
+pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+
+// JPEG quality per level: low=0.55, medium=0.72, high=0.88
+const QUALITY = { low: 0.55, medium: 0.72, high: 0.88 };
+// Render scale per level: lower = smaller output
+const SCALE = { low: 1.2, medium: 1.5, high: 2.0 };
+
 let pdfFile = null;
 let pdfBytes = null;
 
@@ -129,42 +137,70 @@ async function compressPDF() {
   document.getElementById('progress').classList.add('show');
   document.getElementById('result').classList.remove('show');
   document.getElementById('compressBtn').disabled = true;
-  document.getElementById('progressFill').style.width = '30%';
-  document.getElementById('progressLabel').textContent = 'Loading PDF…';
 
   try {
-    const { PDFDocument } = PDFLib;
     const level = document.querySelector('input[name=level]:checked').value;
+    const quality = QUALITY[level];
+    const scale = SCALE[level];
 
-    // Load and re-save — pdf-lib rewriting removes unused objects
-    const pdf = await PDFDocument.load(pdfBytes, { ignoreEncryption: true });
-    document.getElementById('progressFill').style.width = '60%';
-    document.getElementById('progressLabel').textContent = 'Optimising structure…';
+    // Load with PDF.js (handles encrypted + all PDF types)
+    setProgress(5, 'Loading PDF…');
+    const typedArr = new Uint8Array(pdfBytes);
+    const pdfJsDoc = await pdfjsLib.getDocument({ data: typedArr }).promise;
+    const numPages = pdfJsDoc.numPages;
 
-    // objectsPerTick controls compression speed/thoroughness
-    const objectsPerTick = level === 'low' ? 50 : level === 'medium' ? 20 : 5;
-    const saved = await pdf.save({ useObjectStreams: true, addDefaultPage: false, objectsPerTick });
+    const { PDFDocument } = PDFLib;
+    const outDoc = await PDFDocument.create();
 
-    document.getElementById('progressFill').style.width = '100%';
+    for (let i = 1; i <= numPages; i++) {
+      setProgress(5 + Math.round((i / numPages) * 88), `Compressing page ${i} of ${numPages}…`);
+      const page = await pdfJsDoc.getPage(i);
+      const vp = page.getViewport({ scale });
+      const canvas = document.createElement('canvas');
+      canvas.width = vp.width; canvas.height = vp.height;
+      await page.render({ canvasContext: canvas.getContext('2d'), viewport: vp }).promise;
+
+      const jpegBytes = base64ToBytes(canvas.toDataURL('image/jpeg', quality).split(',')[1]);
+      const img = await outDoc.embedJpg(jpegBytes);
+      // Output at 72dpi equivalent (vp.width/scale × vp.height/scale)
+      const w = vp.width / scale, h = vp.height / scale;
+      const outPage = outDoc.addPage([w, h]);
+      outPage.drawImage(img, { x: 0, y: 0, width: w, height: h });
+    }
+
+    setProgress(97, 'Saving…');
+    const saved = await outDoc.save();
+    setProgress(100, 'Done!');
 
     const origSize = pdfFile.size;
     const newSize = saved.byteLength;
     const saving = origSize - newSize;
-    const pct = ((saving / origSize) * 100).toFixed(1);
+    const pct = Math.round((saving / origSize) * 100);
 
-    if (newSize >= origSize) {
-      document.getElementById('resultInfo').textContent = `This PDF is already well-optimised. No reduction possible (${fmtSize(newSize)}).`;
-    } else {
-      document.getElementById('resultInfo').textContent = `${fmtSize(origSize)} → ${fmtSize(newSize)} · Saved ${fmtSize(saving)} (${pct}%)`;
-    }
+    document.getElementById('resultInfo').textContent =
+      saving > 0
+        ? `${fmtSize(origSize)} → ${fmtSize(newSize)} · Saved ${pct}% (${fmtSize(saving)})`
+        : `Original: ${fmtSize(origSize)} · Compressed: ${fmtSize(newSize)} — try a lower quality level for more reduction`;
 
     document.getElementById('downloadBtn').onclick = () => dl(saved, 'compressed.pdf');
     document.getElementById('result').classList.add('show');
     document.getElementById('progress').classList.remove('show');
-  } catch(e) { alert('Error: '+e.message); document.getElementById('progress').classList.remove('show'); }
+  } catch(e) {
+    alert('Error: ' + e.message);
+    document.getElementById('progress').classList.remove('show');
+  }
   document.getElementById('compressBtn').disabled = false;
 }
 
+function setProgress(pct, label) {
+  document.getElementById('progressFill').style.width = pct + '%';
+  document.getElementById('progressLabel').textContent = label;
+}
+function base64ToBytes(b64) {
+  const bin = atob(b64); const arr = new Uint8Array(bin.length);
+  for (let i = 0; i < bin.length; i++) arr[i] = bin.charCodeAt(i);
+  return arr;
+}
 function fmtSize(b) { return b>1048576?(b/1048576).toFixed(1)+' MB':(b/1024).toFixed(0)+' KB'; }
 function dl(bytes, name) {
   const a = document.createElement('a');

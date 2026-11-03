@@ -96,7 +96,7 @@ dropzone.addEventListener('drop', e => { e.preventDefault(); dropzone.classList.
 async function handleFile(f) {
   if (!f || f.type !== 'application/pdf') { alert('Please select a PDF.'); return; }
   pdfFile = f; pdfBytes = await f.arrayBuffer();
-  const pdf = await PDFLib.PDFDocument.load(pdfBytes);
+  const pdf = await PDFLib.PDFDocument.load(pdfBytes, { ignoreEncryption: true });
   const n = pdf.getPageCount();
   document.getElementById('fileName').textContent = f.name;
   document.getElementById('fileSize').textContent = fmtSize(f.size);
@@ -149,7 +149,7 @@ async function rotatePDF() {
   document.getElementById('progressLabel').textContent = 'Rotating pages…';
 
   try {
-    const pdf = await PDFLib.PDFDocument.load(pdfBytes);
+    const pdf = await PDFLib.PDFDocument.load(pdfBytes, { ignoreEncryption: true });
     const n = pdf.getPageCount();
     const mode = document.querySelector('input[name=pages]:checked').value;
     const indices = mode === 'all' ? [...Array(n).keys()] : parseRange(document.getElementById('pageRange').value, n);
