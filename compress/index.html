@@ -37,19 +37,40 @@
   </div>
 
   <div id="compressOptions" style="display:none;margin-top:18px">
-    <label style="font-size:13px;font-weight:600;color:var(--label);display:block;margin-bottom:10px">Compression level</label>
-    <div style="display:flex;flex-direction:column;gap:8px">
-      <label style="display:flex;align-items:center;gap:8px;font-size:14px;cursor:pointer">
-        <input type="radio" name="level" value="low"> Low — smaller file, some quality loss
-      </label>
-      <label style="display:flex;align-items:center;gap:8px;font-size:14px;cursor:pointer">
-        <input type="radio" name="level" value="medium" checked> Medium — balanced (recommended)
-      </label>
-      <label style="display:flex;align-items:center;gap:8px;font-size:14px;cursor:pointer">
-        <input type="radio" name="level" value="high"> High — minimum size, noticeable quality reduction
-      </label>
+    <!-- Mode tabs -->
+    <div style="display:flex;gap:0;border:1.5px solid var(--border,#e2e8f0);border-radius:10px;overflow:hidden;margin-bottom:16px;width:fit-content">
+      <button id="tabQuality" onclick="switchTab('quality')" style="padding:8px 18px;font-size:13px;font-weight:600;border:none;cursor:pointer;background:#ef4444;color:#fff">Quality Level</button>
+      <button id="tabTarget" onclick="switchTab('target')" style="padding:8px 18px;font-size:13px;font-weight:600;border:none;cursor:pointer;background:var(--surface,#fff);color:var(--muted,#64748b)">Target Size</button>
     </div>
-    <p style="font-size:12px;color:var(--muted);margin-top:10px">⚠️ Note: Browser-based compression re-encodes the PDF structure. Results vary by PDF type. Scanned image PDFs compress most. Text-only PDFs compress least.</p>
+
+    <!-- Quality preset panel -->
+    <div id="panelQuality">
+      <div style="display:flex;flex-direction:column;gap:8px">
+        <label style="display:flex;align-items:center;gap:8px;font-size:14px;cursor:pointer"><input type="radio" name="level" value="low"> <b>Low</b> — smallest file, some quality loss (~50–70% reduction)</label>
+        <label style="display:flex;align-items:center;gap:8px;font-size:14px;cursor:pointer"><input type="radio" name="level" value="medium" checked> <b>Medium</b> — balanced (recommended, ~35–50% reduction)</label>
+        <label style="display:flex;align-items:center;gap:8px;font-size:14px;cursor:pointer"><input type="radio" name="level" value="high"> <b>High</b> — best quality, modest reduction (~15–30%)</label>
+      </div>
+    </div>
+
+    <!-- Target size panel -->
+    <div id="panelTarget" style="display:none">
+      <label style="font-size:13px;font-weight:600;margin-bottom:8px;display:block">Maximum output size</label>
+      <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+        <input type="number" id="targetVal" value="2" min="0.1" step="0.1" style="width:90px;padding:9px 12px;border:1.5px solid var(--border,#e2e8f0);border-radius:8px;font-size:15px;background:var(--surface,#fff);color:var(--text,#0f172a)">
+        <select id="targetUnit" style="padding:9px 12px;border:1.5px solid var(--border,#e2e8f0);border-radius:8px;font-size:14px;background:var(--surface,#fff);color:var(--text,#0f172a)">
+          <option value="mb">MB</option>
+          <option value="kb">KB</option>
+        </select>
+        <span style="font-size:13px;color:var(--muted,#64748b)">Common limits:</span>
+        <button onclick="setTarget(1,'mb')" style="padding:5px 10px;border:1px solid var(--border,#e2e8f0);border-radius:6px;background:var(--surface,#fff);cursor:pointer;font-size:12px">1 MB</button>
+        <button onclick="setTarget(2,'mb')" style="padding:5px 10px;border:1px solid var(--border,#e2e8f0);border-radius:6px;background:var(--surface,#fff);cursor:pointer;font-size:12px">2 MB</button>
+        <button onclick="setTarget(5,'mb')" style="padding:5px 10px;border:1px solid var(--border,#e2e8f0);border-radius:6px;background:var(--surface,#fff);cursor:pointer;font-size:12px">5 MB</button>
+        <button onclick="setTarget(200,'kb')" style="padding:5px 10px;border:1px solid var(--border,#e2e8f0);border-radius:6px;background:var(--surface,#fff);cursor:pointer;font-size:12px">200 KB</button>
+      </div>
+      <div id="targetHint" style="font-size:12px;color:var(--muted,#64748b);margin-top:8px"></div>
+    </div>
+
+    <p style="font-size:12px;color:var(--muted,#64748b);margin-top:12px">Pages are re-rendered as images. Scanned & image PDFs compress most. Text PDFs still compress but text becomes non-selectable.</p>
   </div>
 
   <div class="action-bar">
@@ -98,10 +119,46 @@
 <script>
 pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
 
-// JPEG quality per level: low=0.55, medium=0.72, high=0.88
 const QUALITY = { low: 0.55, medium: 0.72, high: 0.88 };
-// Render scale per level: lower = smaller output
-const SCALE = { low: 1.2, medium: 1.5, high: 2.0 };
+const SCALE   = { low: 1.2,  medium: 1.5,  high: 2.0  };
+
+let activeTab = 'quality';
+
+function switchTab(tab) {
+  activeTab = tab;
+  document.getElementById('panelQuality').style.display = tab === 'quality' ? 'block' : 'none';
+  document.getElementById('panelTarget').style.display  = tab === 'target'  ? 'block' : 'none';
+  document.getElementById('tabQuality').style.background = tab === 'quality' ? '#ef4444' : 'var(--surface,#fff)';
+  document.getElementById('tabQuality').style.color      = tab === 'quality' ? '#fff' : 'var(--muted,#64748b)';
+  document.getElementById('tabTarget').style.background  = tab === 'target'  ? '#ef4444' : 'var(--surface,#fff)';
+  document.getElementById('tabTarget').style.color       = tab === 'target'  ? '#fff' : 'var(--muted,#64748b)';
+  updateTargetHint();
+}
+
+function setTarget(val, unit) {
+  document.getElementById('targetVal').value = val;
+  document.getElementById('targetUnit').value = unit;
+  updateTargetHint();
+}
+
+function updateTargetHint() {
+  if (!pdfFile) return;
+  const targetBytes = getTargetBytes();
+  const pct = Math.round((1 - targetBytes / pdfFile.size) * 100);
+  const hint = document.getElementById('targetHint');
+  if (!targetBytes || !pdfFile) { hint.textContent = ''; return; }
+  if (targetBytes >= pdfFile.size) {
+    hint.textContent = `Original is ${fmtSize(pdfFile.size)} — already under target.`;
+  } else {
+    hint.textContent = `Need to reduce by ~${pct}% (${fmtSize(pdfFile.size)} → ${fmtSize(targetBytes)})`;
+  }
+}
+
+function getTargetBytes() {
+  const val = parseFloat(document.getElementById('targetVal').value);
+  const unit = document.getElementById('targetUnit').value;
+  return unit === 'mb' ? val * 1048576 : val * 1024;
+}
 
 let pdfFile = null;
 let pdfBytes = null;
@@ -121,6 +178,7 @@ async function handleFile(f) {
   document.getElementById('compressOptions').style.display = 'block';
   document.getElementById('compressBtn').disabled = false;
   document.getElementById('result').classList.remove('show');
+  updateTargetHint();
 }
 
 function clearFile() {
@@ -139,48 +197,29 @@ async function compressPDF() {
   document.getElementById('compressBtn').disabled = true;
 
   try {
-    const level = document.querySelector('input[name=level]:checked').value;
-    const quality = QUALITY[level];
-    const scale = SCALE[level];
-
-    // Load with PDF.js (handles encrypted + all PDF types)
     setProgress(5, 'Loading PDF…');
     const typedArr = new Uint8Array(pdfBytes);
     const pdfJsDoc = await pdfjsLib.getDocument({ data: typedArr }).promise;
     const numPages = pdfJsDoc.numPages;
 
-    const { PDFDocument } = PDFLib;
-    const outDoc = await PDFDocument.create();
+    let saved;
 
-    for (let i = 1; i <= numPages; i++) {
-      setProgress(5 + Math.round((i / numPages) * 88), `Compressing page ${i} of ${numPages}…`);
-      const page = await pdfJsDoc.getPage(i);
-      const vp = page.getViewport({ scale });
-      const canvas = document.createElement('canvas');
-      canvas.width = vp.width; canvas.height = vp.height;
-      await page.render({ canvasContext: canvas.getContext('2d'), viewport: vp }).promise;
-
-      const jpegBytes = base64ToBytes(canvas.toDataURL('image/jpeg', quality).split(',')[1]);
-      const img = await outDoc.embedJpg(jpegBytes);
-      // Output at 72dpi equivalent (vp.width/scale × vp.height/scale)
-      const w = vp.width / scale, h = vp.height / scale;
-      const outPage = outDoc.addPage([w, h]);
-      outPage.drawImage(img, { x: 0, y: 0, width: w, height: h });
+    if (activeTab === 'target') {
+      saved = await compressToTarget(pdfJsDoc, numPages, getTargetBytes());
+    } else {
+      const level = document.querySelector('input[name=level]:checked').value;
+      saved = await renderPDF(pdfJsDoc, numPages, QUALITY[level], SCALE[level]);
     }
 
-    setProgress(97, 'Saving…');
-    const saved = await outDoc.save();
     setProgress(100, 'Done!');
-
     const origSize = pdfFile.size;
     const newSize = saved.byteLength;
-    const saving = origSize - newSize;
-    const pct = Math.round((saving / origSize) * 100);
+    const pct = Math.round(((origSize - newSize) / origSize) * 100);
 
     document.getElementById('resultInfo').textContent =
-      saving > 0
-        ? `${fmtSize(origSize)} → ${fmtSize(newSize)} · Saved ${pct}% (${fmtSize(saving)})`
-        : `Original: ${fmtSize(origSize)} · Compressed: ${fmtSize(newSize)} — try a lower quality level for more reduction`;
+      newSize < origSize
+        ? `${fmtSize(origSize)} → ${fmtSize(newSize)} · Reduced by ${pct}%`
+        : `${fmtSize(origSize)} → ${fmtSize(newSize)} · Try a lower quality level for more reduction`;
 
     document.getElementById('downloadBtn').onclick = () => dl(saved, 'compressed.pdf');
     document.getElementById('result').classList.add('show');
@@ -190,6 +229,45 @@ async function compressPDF() {
     document.getElementById('progress').classList.remove('show');
   }
   document.getElementById('compressBtn').disabled = false;
+}
+
+async function renderPDF(pdfJsDoc, numPages, quality, scale) {
+  const { PDFDocument } = PDFLib;
+  const outDoc = await PDFDocument.create();
+  for (let i = 1; i <= numPages; i++) {
+    setProgress(5 + Math.round((i / numPages) * 88), `Page ${i} of ${numPages}…`);
+    const page = await pdfJsDoc.getPage(i);
+    const vp = page.getViewport({ scale });
+    const canvas = document.createElement('canvas');
+    canvas.width = vp.width; canvas.height = vp.height;
+    await page.render({ canvasContext: canvas.getContext('2d'), viewport: vp }).promise;
+    const jpegBytes = base64ToBytes(canvas.toDataURL('image/jpeg', quality).split(',')[1]);
+    const img = await outDoc.embedJpg(jpegBytes);
+    const w = vp.width / scale, h = vp.height / scale;
+    const outPage = outDoc.addPage([w, h]);
+    outPage.drawImage(img, { x: 0, y: 0, width: w, height: h });
+  }
+  setProgress(96, 'Saving…');
+  return outDoc.save();
+}
+
+async function compressToTarget(pdfJsDoc, numPages, targetBytes) {
+  // Binary search quality at scale 1.5; if still over at q=0.2, drop scale to 1.0
+  const scales = [1.5, 1.0];
+  for (const scale of scales) {
+    let lo = 0.20, hi = 0.92;
+    let best = null;
+    for (let iter = 0; iter < 8; iter++) {
+      const mid = (lo + hi) / 2;
+      setProgress(10 + Math.round(iter * 10), `Finding best quality… (iter ${iter + 1}/8)`);
+      const attempt = await renderPDF(pdfJsDoc, numPages, mid, scale);
+      if (attempt.byteLength <= targetBytes) { best = attempt; lo = mid; }
+      else hi = mid;
+    }
+    if (best) return best;
+  }
+  // Fallback: lowest quality
+  return renderPDF(pdfJsDoc, numPages, 0.20, 1.0);
 }
 
 function setProgress(pct, label) {
