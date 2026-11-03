@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Remove PDF Password Free — Unlock PDF Online | PDFLab</title>
+  <meta name="description" content="Remove password from PDF free online. Unlock a password-protected PDF in your browser — no upload, no server, 100% private. Enter password once, download unlocked PDF.">
+  <link rel="canonical" href="https://nxtcraft.github.io/pdfcraft/unlock/">
+  <meta property="og:title" content="Remove PDF Password Free — Unlock PDF Online">
+  <meta property="og:description" content="Remove password protection from any PDF free. Browser-based — your file never leaves your device.">
+  <meta property="og:url" content="https://nxtcraft.github.io/pdfcraft/unlock/">
+  <meta property="og:type" content="website">
+  <meta name="twitter:card" content="summary">
+  <meta name="robots" content="index, follow">
+  <link rel="stylesheet" href="../css/main.css">
+  <script type="application/ld+json">
+  {"@context":"https://schema.org","@type":"WebApplication","name":"Remove PDF Password","url":"https://nxtcraft.github.io/pdfcraft/unlock/","applicationCategory":"UtilitiesApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"0","priceCurrency":"INR"},"description":"Remove password from PDF free online. Browser-based, no upload required."}
+  </script>
+  <script type="application/ld+json">
+  {"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"How do I remove a password from a PDF?","acceptedAnswer":{"@type":"Answer","text":"Upload your password-protected PDF, enter the PDF's current password, then click Unlock PDF. The tool decrypts the file in your browser and lets you download an unlocked copy."}},{"@type":"Question","name":"Is it safe to unlock PDF online?","acceptedAnswer":{"@type":"Answer","text":"Yes — PDFLab processes the PDF entirely in your browser. Your file and password are never sent to any server. Everything stays on your device."}},{"@type":"Question","name":"Can I remove PDF password without knowing it?","acceptedAnswer":{"@type":"Answer","text":"No. This tool removes the password from a PDF you own and already know the password for. If you've forgotten the password, you'll need the original source document."}},{"@type":"Question","name":"What types of PDF passwords can be removed?","acceptedAnswer":{"@type":"Answer","text":"This tool removes the open/user password that prevents viewing the PDF. It works on PDFs protected with standard 128-bit and 256-bit encryption."}}]}
+  </script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
+</head>
+<body>
+<nav><a class="nav-logo" href="../index.html"><span class="pdf-icon">PDF</span>Lab</a></nav>
+
+<div class="container">
+<div class="tool-page">
+  <a class="back-link" href="../index.html">← All PDF Tools</a>
+  <h1 class="tool-title">🔓 Remove PDF Password</h1>
+  <p class="tool-desc">Unlock a password-protected PDF. Enter the current password once — download an unlocked copy. Your file never leaves your browser.</p>
+
+  <div class="dropzone" id="dropzone">
+    <input type="file" accept=".pdf" id="fileInput" onchange="handleFile(this.files[0])">
+    <div class="dropzone-icon">🔒</div>
+    <div class="dropzone-text">Drop password-protected PDF here or click to select</div>
+    <div class="dropzone-sub">One PDF at a time</div>
+  </div>
+
+  <div id="fileInfo" style="display:none;background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:16px 20px;margin-top:16px;display:none;align-items:center;gap:12px">
+    <span style="font-size:28px">📄</span>
+    <div style="flex:1">
+      <div id="fileName" style="font-weight:600;font-size:15px"></div>
+      <div id="fileSize" style="font-size:13px;color:var(--muted)"></div>
+    </div>
+    <button class="btn btn-gray" style="padding:6px 14px;font-size:13px" onclick="clearFile()">✕ Remove</button>
+  </div>
+
+  <div id="passwordRow" style="display:none;margin-top:20px">
+    <label style="display:block;font-size:14px;font-weight:600;margin-bottom:8px;color:var(--text)">PDF Password</label>
+    <div style="display:flex;gap:10px;align-items:center">
+      <input type="password" id="pwInput" placeholder="Enter the PDF password" style="flex:1;padding:12px 16px;border:1.5px solid var(--border);border-radius:10px;font-size:15px;background:var(--surface);color:var(--text);outline:none" oninput="updateBtn()">
+      <button type="button" id="togglePw" onclick="togglePw()" style="padding:10px 14px;border:1.5px solid var(--border);border-radius:10px;background:var(--surface);cursor:pointer;font-size:16px" title="Show/hide password">👁</button>
+    </div>
+    <div id="pwError" style="display:none;color:#ef4444;font-size:13px;margin-top:6px">❌ Wrong password — the PDF could not be unlocked.</div>
+  </div>
+
+  <div class="action-bar" style="margin-top:20px">
+    <button class="btn btn-red" id="unlockBtn" onclick="unlockPDF()" disabled>🔓 Unlock PDF</button>
+    <button class="btn btn-gray" onclick="clearFile()">Clear</button>
+  </div>
+
+  <div class="progress-wrap" id="progress">
+    <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+    <div class="progress-label" id="progressLabel">Unlocking…</div>
+  </div>
+
+  <div class="result-box" id="result">
+    <div class="result-info">
+      <strong>✓ Password removed!</strong>
+      <p id="resultInfo">Your unlocked PDF is ready to download.</p>
+    </div>
+    <button class="btn btn-download" id="downloadBtn">⬇ Download Unlocked PDF</button>
+  </div>
+
+  <div class="security">
+    <span>🔒</span>
+    <span>Your PDF and password are processed entirely in your browser. Nothing is uploaded to any server. Your file stays 100% private.</span>
+  </div>
+
+  <div class="tips">
+    <h3>Notes</h3>
+    <ul>
+      <li>You must know the PDF's existing password — this tool cannot crack or bypass unknown passwords</li>
+      <li>Works on PDFs with an <em>open password</em> (required to view the file)</li>
+      <li>The downloaded file will have no password — anyone can open it</li>
+      <li>Use this only on PDFs you own or have rights to unlock</li>
+    </ul>
+  </div>
+
+  <div class="seo-content">
+    <h2>How to Remove a PDF Password</h2>
+    <p>If you have a password-protected PDF that you need to access without entering the password every time, PDFLab's <strong>PDF password remover</strong> lets you unlock it instantly — no software, no upload, no risk. Your file is decrypted entirely inside your browser.</p>
+    <p>Common uses: unlocking PDF bank statements you save monthly, removing passwords from payslips or tax documents, unlocking government-issued PDFs (Form 16, ITR acknowledgements, Aadhaar cards that are password-protected with your date of birth).</p>
+    <h3>Aadhaar & government PDF passwords</h3>
+    <p>Many government PDFs use a standard password format. For example, Aadhaar card PDFs from UIDAI use the first 4 letters of your name (uppercase) + your birth year, e.g. <code>PRIY1995</code>. Enter that in the password field above to unlock it.</p>
+
+    <h2>Frequently Asked Questions</h2>
+    <div style="display:flex;flex-direction:column;gap:14px;margin-top:8px">
+      <div><strong>How do I remove a password from a PDF?</strong><p style="margin-top:4px">Upload your PDF, type the current password, click Unlock PDF, and download the unlocked file. That's it.</p></div>
+      <div><strong>Can this tool crack a PDF password I don't know?</strong><p style="margin-top:4px">No. You must know the existing password. This tool removes a known password so you don't have to type it every time — it cannot bypass or brute-force unknown passwords.</p></div>
+      <div><strong>Is my PDF safe?</strong><p style="margin-top:4px">Completely. Everything happens in your browser's memory. No file and no password is ever sent to any server.</p></div>
+      <div><strong>What's the Aadhaar PDF password?</strong><p style="margin-top:4px">UIDAI Aadhaar PDFs are locked with: first 4 letters of your name in capitals + birth year. Example: if your name is Priya and you were born in 1990, the password is <code>PRIY1990</code>.</p></div>
+    </div>
+
+    <div class="related-links">
+      <strong>Related tools:</strong>
+      <a href="../merge/">Merge PDF →</a>
+      <a href="../compress/">Compress PDF →</a>
+      <a href="../split/">Split PDF →</a>
+    </div>
+  </div>
+</div>
+</div>
+
+<footer><p>© 2026 PDFLab — Files processed locally in your browser. No data stored.</p></footer>
+
+<script>
+let pdfFile = null;
+let unlockedBytes = null;
+
+const dropzone = document.getElementById('dropzone');
+dropzone.addEventListener('dragover', e => { e.preventDefault(); dropzone.classList.add('drag-over'); });
+dropzone.addEventListener('dragleave', () => dropzone.classList.remove('drag-over'));
+dropzone.addEventListener('drop', e => { e.preventDefault(); dropzone.classList.remove('drag-over'); if (e.dataTransfer.files[0]) handleFile(e.dataTransfer.files[0]); });
+
+function handleFile(f) {
+  if (!f || f.type !== 'application/pdf') return;
+  pdfFile = f;
+  document.getElementById('fileName').textContent = f.name;
+  document.getElementById('fileSize').textContent = fmtSize(f.size);
+  document.getElementById('fileInfo').style.display = 'flex';
+  document.getElementById('passwordRow').style.display = 'block';
+  document.getElementById('pwError').style.display = 'none';
+  document.getElementById('result').classList.remove('show');
+  updateBtn();
+}
+
+function clearFile() {
+  pdfFile = null;
+  unlockedBytes = null;
+  document.getElementById('fileInput').value = '';
+  document.getElementById('fileInfo').style.display = 'none';
+  document.getElementById('passwordRow').style.display = 'none';
+  document.getElementById('pwInput').value = '';
+  document.getElementById('pwError').style.display = 'none';
+  document.getElementById('result').classList.remove('show');
+  document.getElementById('progress').classList.remove('show');
+  document.getElementById('unlockBtn').disabled = true;
+}
+
+function updateBtn() {
+  document.getElementById('unlockBtn').disabled = !pdfFile || !document.getElementById('pwInput').value;
+}
+
+function togglePw() {
+  const inp = document.getElementById('pwInput');
+  inp.type = inp.type === 'password' ? 'text' : 'password';
+}
+
+async function unlockPDF() {
+  if (!pdfFile) return;
+  const pw = document.getElementById('pwInput').value;
+  if (!pw) return;
+
+  document.getElementById('pwError').style.display = 'none';
+  showProgress('Loading PDF…', 20);
+  document.getElementById('unlockBtn').disabled = true;
+
+  try {
+    const bytes = await pdfFile.arrayBuffer();
+    setProgress(40, 'Decrypting…');
+
+    const { PDFDocument } = PDFLib;
+    const pdfDoc = await PDFDocument.load(bytes, { password: pw });
+
+    setProgress(80, 'Saving unlocked PDF…');
+    unlockedBytes = await pdfDoc.save();
+    setProgress(100, 'Done!');
+
+    const pageCount = pdfDoc.getPageCount();
+    const baseName = pdfFile.name.replace(/\.pdf$/i, '');
+    document.getElementById('resultInfo').textContent = `${pageCount} page${pageCount !== 1 ? 's' : ''} · ${fmtSize(unlockedBytes.byteLength)} — password removed`;
+    document.getElementById('downloadBtn').onclick = () => download(unlockedBytes, baseName + '_unlocked.pdf');
+    document.getElementById('result').classList.add('show');
+    document.getElementById('progress').classList.remove('show');
+  } catch (e) {
+    document.getElementById('progress').classList.remove('show');
+    if (e.message && (e.message.includes('password') || e.message.includes('encrypt') || e.message.includes('decrypt'))) {
+      document.getElementById('pwError').style.display = 'block';
+    } else {
+      alert('Could not process PDF: ' + e.message);
+    }
+  }
+  document.getElementById('unlockBtn').disabled = false;
+}
+
+function showProgress(label, pct) {
+  document.getElementById('progress').classList.add('show');
+  document.getElementById('result').classList.remove('show');
+  setProgress(pct, label);
+}
+function setProgress(pct, label) {
+  document.getElementById('progressFill').style.width = pct + '%';
+  document.getElementById('progressLabel').textContent = label;
+}
+function fmtSize(b) { return b > 1048576 ? (b/1048576).toFixed(1)+' MB' : (b/1024).toFixed(0)+' KB'; }
+function download(bytes, name) {
+  const blob = new Blob([bytes], { type: 'application/pdf' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = name;
+  a.click();
+  URL.revokeObjectURL(a.href);
+}
+</script>
+</body>
+</html>
