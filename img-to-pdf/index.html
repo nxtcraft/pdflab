@@ -17,6 +17,7 @@
   </script>
 
 <link rel="stylesheet" id="nc-dark" href="/assets/nc-dark.css">
+<script>function ncEsc(s){return String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"})[c])}</script>
 </head>
 <body>
 <nav><a class="nav-logo" href="../index.html"><span class="pdf-icon">PDF</span>Craft</a></nav>
@@ -119,7 +120,7 @@ function renderPreviews() {
     return `<div style="position:relative">
       <img src="${url}" style="width:100%;height:80px;object-fit:cover;border-radius:8px;border:1px solid var(--border)">
       <button onclick="removeImg(${i})" style="position:absolute;top:2px;right:2px;background:rgba(0,0,0,.5);color:#fff;border:none;border-radius:50%;width:18px;height:18px;cursor:pointer;font-size:12px;line-height:1">×</button>
-      <div style="font-size:10px;color:var(--muted);margin-top:3px;text-overflow:ellipsis;overflow:hidden;white-space:nowrap">${f.name}</div>
+      <div style="font-size:10px;color:var(--muted);margin-top:3px;text-overflow:ellipsis;overflow:hidden;white-space:nowrap">${ncEsc(f.name)}</div>
     </div>`;
   }).join('');
   document.getElementById('convertBtn').disabled = images.length === 0;
