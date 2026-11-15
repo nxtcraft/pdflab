@@ -8,9 +8,9 @@
 <meta name="description" content="Rearrange PDF pages online for free. Drag and drop pages into any order, then download the reorganised PDF. Browser-based — no upload, no signup.">
 <meta name="keywords" content="reorder pdf pages, rearrange pdf pages online free, reorganize pdf, pdf page order changer">
 <meta property="og:title" content="Reorder PDF Pages Free — Drag & Drop Online">
-<meta property="og:url" content="https://nxtcraft.github.io/pdfcraft/reorder/">
-<link rel="canonical" href="https://nxtcraft.github.io/pdfcraft/reorder/">
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"Reorder PDF Pages","url":"https://nxtcraft.github.io/pdfcraft/reorder/","applicationCategory":"UtilitiesApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"0","priceCurrency":"INR"}}</script>
+<meta property="og:url" content="https://nxtcraft.github.io/pdflab/reorder/">
+<link rel="canonical" href="https://nxtcraft.github.io/pdflab/reorder/">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"Reorder PDF Pages","url":"https://nxtcraft.github.io/pdflab/reorder/","applicationCategory":"UtilitiesApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"0","priceCurrency":"INR"}}</script>
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"How do I rearrange pages in a PDF for free?","acceptedAnswer":{"@type":"Answer","text":"Upload your PDF, then drag and drop the page cards into your desired order. Click Save New Order to download the reorganised PDF. Everything runs in your browser — no server upload."}},{"@type":"Question","name":"Can I move a page to the beginning or end?","acceptedAnswer":{"@type":"Answer","text":"Yes. Drag any page card to any position. Use the ↑ and ↓ buttons on each card for single-step moves, or drag for free repositioning."}},{"@type":"Question","name":"Does reordering affect the PDF content?","acceptedAnswer":{"@type":"Answer","text":"Only the page order changes. All content, text, images, fonts and annotations on each page remain exactly the same."}}]}</script>
 <link rel="stylesheet" href="../css/main.css">
 <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9027849237070207" crossorigin="anonymous"></script>
@@ -90,10 +90,9 @@ html[data-theme="dark"] .pg-card.drag-over-top,html[data-theme="dark"] .pg-card.
 </div>
 
 <div class="related-tools"><h3>Related Tools</h3><div class="related-tools-grid"><a href="../delete-pages/">🗑️ Delete Pages</a><a href="../merge/">📎 Merge PDF</a><a href="../split/">✂️ Split PDF</a><a href="../rotate/">🔄 Rotate PDF</a></div></div>
-<script>if("serviceWorker"in navigator)navigator.serviceWorker.register("/pdfcraft/sw.js");</script>
+<script>if("serviceWorker"in navigator)navigator.serviceWorker.register("/pdflab/sw.js");</script>
 <div style="text-align:center;padding:14px 20px;font-size:13px;color:#94a3b8;border-top:1px solid rgba(0,0,0,0.08);margin-top:16px"><a href="https://nxtcraft.github.io/" style="color:#6366f1;text-decoration:none;font-weight:600">← All Tools</a> &nbsp;·&nbsp; <a href="https://buymeacoffee.com/nxtcraft" target="_blank" rel="noopener" style="background:#FFDD00;color:#000;padding:2px 10px;border-radius:6px;font-weight:700;text-decoration:none;font-size:12px">☕ Support</a> &nbsp;·&nbsp; <a href="mailto:pradeepkesharwani4@gmail.com?subject=Feedback" style="color:#94a3b8;text-decoration:none">📧 Feedback</a></div>
-<button id="nc-dm" title="Toggle dark mode" onclick="!function(){var e=document.documentElement,t=e.getAttribute('data-theme')==='dark'?'light':'dark';e.setAttribute('data-theme',t);localStorage.setItem('nc_theme',t);document.getElementById('nc-dm').textContent=t==='dark'?'☀️':'🌙'}()" style="position:fixed;bottom:72px;right:14px;z-index:9999;width:40px;height:40px;border-radius:50%;border:1px solid rgba(255,255,255,.15);cursor:pointer;font-size:18px;background:rgba(0,0,0,.5);backdrop-filter:blur(6px);box-shadow:0 2px 10px rgba(0,0,0,.3)">🌙</button>
-<script>!function(){var b=document.getElementById('nc-dm');if(b)b.textContent=localStorage.getItem('nc_theme')==='dark'?'☀️':'🌙'}()</script>
+<script src="/assets/nc-theme.js" defer></script>
 
 <script>
 const { PDFDocument } = PDFLib;

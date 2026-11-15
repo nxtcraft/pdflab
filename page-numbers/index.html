@@ -8,9 +8,9 @@
 <meta name="description" content="Add page numbers to PDF online for free. Choose position (bottom center, corner), format (1, Page 1, 1/10), font size and start number. Browser-based, no upload.">
 <meta name="keywords" content="add page numbers to pdf, pdf page numbering online free, number pdf pages, pdf page number stamp">
 <meta property="og:title" content="Add Page Numbers to PDF Free Online">
-<meta property="og:url" content="https://nxtcraft.github.io/pdfcraft/page-numbers/">
-<link rel="canonical" href="https://nxtcraft.github.io/pdfcraft/page-numbers/">
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"Add Page Numbers to PDF","url":"https://nxtcraft.github.io/pdfcraft/page-numbers/","applicationCategory":"UtilitiesApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"0","priceCurrency":"INR"}}</script>
+<meta property="og:url" content="https://nxtcraft.github.io/pdflab/page-numbers/">
+<link rel="canonical" href="https://nxtcraft.github.io/pdflab/page-numbers/">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"Add Page Numbers to PDF","url":"https://nxtcraft.github.io/pdflab/page-numbers/","applicationCategory":"UtilitiesApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"0","priceCurrency":"INR"}}</script>
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"How do I add page numbers to a PDF for free?","acceptedAnswer":{"@type":"Answer","text":"Upload your PDF to PDFCraft, choose position (e.g. bottom center), format and font size, then click Add Page Numbers. Download the numbered PDF instantly — no signup, fully browser-based."}},{"@type":"Question","name":"Can I start page numbers from a number other than 1?","acceptedAnswer":{"@type":"Answer","text":"Yes. Set the Start number field to any value (e.g. 5 to start numbering from 5). This is useful when merging sections of a larger document."}},{"@type":"Question","name":"Can I skip the first page when adding page numbers?","acceptedAnswer":{"@type":"Answer","text":"Yes. Enable Skip first page to leave the cover/title page unnumbered. The numbering still starts from your chosen start number on page 2."}}]}</script>
 <link rel="stylesheet" href="../css/main.css">
 <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9027849237070207" crossorigin="anonymous"></script>
@@ -126,10 +126,9 @@ html[data-theme="dark"] p,html[data-theme="dark"] li,html[data-theme="dark"] lab
 </div>
 
 <div class="related-tools"><h3>Related Tools</h3><div class="related-tools-grid"><a href="../watermark/">💧 Add Watermark</a><a href="../merge/">📎 Merge PDF</a><a href="../rotate/">🔄 Rotate PDF</a><a href="../split/">✂️ Split PDF</a></div></div>
-<script>if("serviceWorker"in navigator)navigator.serviceWorker.register("/pdfcraft/sw.js");</script>
+<script>if("serviceWorker"in navigator)navigator.serviceWorker.register("/pdflab/sw.js");</script>
 <div style="text-align:center;padding:14px 20px;font-size:13px;color:#94a3b8;border-top:1px solid rgba(0,0,0,0.08);margin-top:16px"><a href="https://nxtcraft.github.io/" style="color:#6366f1;text-decoration:none;font-weight:600">← All Tools</a> &nbsp;·&nbsp; <a href="https://buymeacoffee.com/nxtcraft" target="_blank" rel="noopener" style="background:#FFDD00;color:#000;padding:2px 10px;border-radius:6px;font-weight:700;text-decoration:none;font-size:12px">☕ Support</a> &nbsp;·&nbsp; <a href="mailto:pradeepkesharwani4@gmail.com?subject=Feedback" style="color:#94a3b8;text-decoration:none">📧 Feedback</a></div>
-<button id="nc-dm" title="Toggle dark mode" onclick="!function(){var e=document.documentElement,t=e.getAttribute('data-theme')==='dark'?'light':'dark';e.setAttribute('data-theme',t);localStorage.setItem('nc_theme',t);document.getElementById('nc-dm').textContent=t==='dark'?'☀️':'🌙'}()" style="position:fixed;bottom:72px;right:14px;z-index:9999;width:40px;height:40px;border-radius:50%;border:1px solid rgba(255,255,255,.15);cursor:pointer;font-size:18px;background:rgba(0,0,0,.5);backdrop-filter:blur(6px);box-shadow:0 2px 10px rgba(0,0,0,.3)">🌙</button>
-<script>!function(){var b=document.getElementById('nc-dm');if(b)b.textContent=localStorage.getItem('nc_theme')==='dark'?'☀️':'🌙'}()</script>
+<script src="/assets/nc-theme.js" defer></script>
 
 <script>
 const { PDFDocument, rgb, StandardFonts } = PDFLib;
